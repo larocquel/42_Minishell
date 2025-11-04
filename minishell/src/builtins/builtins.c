@@ -1,0 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/02 22:52:31 by leoaguia          #+#    #+#             */
+/*   Updated: 2025/11/02 22:52:32 by leoaguia         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+int	exec_builtin(t_shell *sh, char **argv)
+{
+	if (!strcmp(argv[0], "echo")) return (builtin_echo(argv));
+	if (!strcmp(argv[0], "pwd")) return (builtin_pwd());
+	if (!strcmp(argv[0], "env")) return (builtin_env(sh));
+	if (!strcmp(argv[0], "exit")) return (builtin_exit(sh, argv));
+	if (!strcmp(argv[0], "cd")) return (builtin_cd(sh, argv));
+	if (!strcmp(argv[0], "export")) return (builtin_export(sh, argv));
+	if (!strcmp(argv[0], "unset")) return (builtin_unset(sh, argv));
+	return (1);
+}
