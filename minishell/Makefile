@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/02 22:51:07 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/04 19:57:21 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/05 23:00:58 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,10 @@ SRCS := 	$(SRC_DIR)/main.c				\
 			$(SRC_DIR)/utils/utils_str.c	\
 			$(SRC_DIR)/utils/utils_env.c	\
 			$(SRC_DIR)/utils/utils_num.c	\
-			$(SRC_DIR)/parse/tokenizer.c
+			$(SRC_DIR)/parse/token.c		\
+			$(SRC_DIR)/parse/token_utils.c	\
+			$(SRC_DIR)/parse/token_read.c	\
+			$(SRC_DIR)/parse/token_buf.c
 
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
