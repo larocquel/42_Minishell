@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/04 18:56:02 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/05 22:51:14 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int		ms_isnumber(const char *s);
 
 /* builtins */
 int		builtin_echo(char **argv);
-int		builtin_pwd(void);
+int		builtin_pwd(char **argv);
 int		builtin_env(t_shell *sh);
 int		builtin_exit(t_shell *sh, char **argv);
 int		builtin_cd(t_shell *sh, char **argv);
