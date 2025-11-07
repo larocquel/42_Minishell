@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:52 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:53 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:36:58 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	builtin_export(t_shell *sh, char **argv)
 
 	i = 1;
 	rc = 0;
-	if (!argv[1]) return (builtin_env(sh));
+	if (!argv[1]) return (builtin_env(sh, argv));
 	while (argv[i])
 	{
 		eq = strchr(argv[i], '=');

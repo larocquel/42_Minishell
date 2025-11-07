@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/05 22:51:14 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/06 16:34:34 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "libft.h"
 
 extern volatile sig_atomic_t	g_sig;
 
@@ -91,7 +92,7 @@ int		ms_isnumber(const char *s);
 /* builtins */
 int		builtin_echo(char **argv);
 int		builtin_pwd(char **argv);
-int		builtin_env(t_shell *sh);
+int		builtin_env(t_shell *sh, char **argv);
 int		builtin_exit(t_shell *sh, char **argv);
 int		builtin_cd(t_shell *sh, char **argv);
 int		builtin_export(t_shell *sh, char **argv);
