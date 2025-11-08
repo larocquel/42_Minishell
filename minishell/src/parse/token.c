@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 14:17:00 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/05 23:03:51 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:41:58 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,18 @@ void	free_token_list(t_token *lst)
 		free(lst);
 		lst = n;
 	}
+}
+
+void	free_tokens(char **toks)
+{
+	size_t	i = 0;
+
+	if (!toks)
+		return ;
+	while (toks[i])
+	{
+		free(toks[i]);
+		i++;
+	}
+	free(toks);
 }

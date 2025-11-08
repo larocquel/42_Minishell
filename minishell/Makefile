@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/02 22:51:07 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/05 23:00:58 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/08 16:46:18 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,9 @@ INCS		:= -I$(INC_DIR) -I$(LIBFT_DIR)
 
 SRCS := 	$(SRC_DIR)/main.c				\
 			$(SRC_DIR)/repl.c				\
+			$(SRC_DIR)/repl_helper.c		\
 			$(SRC_DIR)/signals.c			\
 			$(SRC_DIR)/shell_init.c			\
-			$(SRC_DIR)/tokenize_simple.c	\
 			$(SRC_DIR)/exec/exec.c			\
 			$(SRC_DIR)/exec/path.c			\
 			$(SRC_DIR)/builtins/builtins.c	\

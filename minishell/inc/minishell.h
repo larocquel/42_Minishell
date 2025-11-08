@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/05 23:33:00 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:45:06 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,32 +79,34 @@ typedef struct s_mask
 void	shell_init(t_shell *sh, char **envp);
 void	shell_destroy(t_shell *sh);
 void	repl_loop(t_shell *sh);
+char	**args_from_tokens(t_token *lst);
+void	exec_simple(t_shell *sh, char **args);
+int		handle_line(t_shell *sh, char *line);
 
 //	SIGNALS
 void	signals_setup_interactive(void);
 void	signals_setup_child(void);
 void	sigint_handler(int signo);
 
-//	SSIMPLE PARSER + FUTURE LEXER
-char	**tokenize_simple(const char *line);
-void	free_tokens(char **toks);
-t_token	*lex_line(const char *s, int *err);
-void	free_token_list(t_token *lst);
-char	**tokens_to_argv(t_token *lst);
-
 //	TOKENS
+
 //	token.c
 t_token	*lex_line(const char *s, int *err);
 void	free_token_list(t_token *lst);
+void	free_tokens(char **toks);
+
+
 //	token_utils.c
-int	tk_is_space(int c);
-int	tk_is_operator(int c);
+int		tk_is_space(int c);
+int		tk_is_operator(int c);
 t_token	*tk_new(t_toktype type, char *val, unsigned char *mask);
 void	tk_push(t_token **head, t_token **tail, t_token *node);
+
 //	token_read.c
 t_token	*tk_read_op(const char *s, size_t *i);
 char	*tk_read_word(
 	const char *s, size_t *i, int *err, unsigned char **out_mask);
+
 //	token_buf.c
 char	*tk_add_str(t_str *b, char c, int *err);
 unsigned char	*tk_add_mask(t_mask *m, unsigned char v, int *err);
