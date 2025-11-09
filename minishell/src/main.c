@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:41 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:51:42 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:48:54 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	main(int ac, char **av, char **envp)
 	(void)av;
 	if (ac > 1)
 		fprintf(stderr, "minishell: args ignored\n");
-	shell_init(&sh, envp);
-	repl_loop(&sh);
-	shell_destroy(&sh);
+	ms_init(&sh, envp);
+	ms_loop(&sh);
+	ms_destroy(&sh);
 	return (sh.last_status);
 }

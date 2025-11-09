@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/08 16:45:06 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:46:59 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,20 +75,24 @@ typedef struct s_mask
 	size_t			len;
 }	t_mask;
 
-//	CORE
-void	shell_init(t_shell *sh, char **envp);
-void	shell_destroy(t_shell *sh);
-void	repl_loop(t_shell *sh);
+//	ms_init.c
+void	ms_init(t_shell *sh, char **envp);
+void	ms_destroy(t_shell *sh);
+
+//	ms_loop.c
+void	ms_loop(t_shell *sh);
+
+//	ms_loop_helper.c
 char	**args_from_tokens(t_token *lst);
 void	exec_simple(t_shell *sh, char **args);
-int		handle_line(t_shell *sh, char *line);
+void	handle_line(t_shell *sh, char *line);
 
 //	SIGNALS
 void	signals_setup_interactive(void);
 void	signals_setup_child(void);
 void	sigint_handler(int signo);
 
-//	TOKENS
+//	src/parse/
 
 //	token.c
 t_token	*lex_line(const char *s, int *err);

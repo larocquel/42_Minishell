@@ -1,39 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   repl_helper.c                                      :+:      :+:    :+:   */
+/*   ms_loop_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 16:17:52 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/08 16:42:21 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:53:25 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/* Conta WORDs consecutivos no começo da lista de tokens. */
-
-static size_t	count_leading_words(t_token *lst)
+/*
+** Conta quantos tokens iniciais são do tipo WORD (até encontrar um operador
+** como pipe/redireção ou o fim da lista). Usado para saber o tamanho do vetor
+** de argumentos que será alocado em args_from_tokens.
+*/
+static size_t	count_initial_words(t_token *lst)
 {
 	size_t	n;
-	t_token	*cur;
 
 	n = 0;
-	cur = lst;
-	while (cur && cur->type == WORD)
+	while (lst && lst->type == WORD)
 	{
 		n++;
-		cur = cur->next;
+		lst = lst->next;
 	}
 	return (n);
 }
 
-
-/* 	Libera parcialmente args[0..i-1] e o vetor args. */
-
-static void	free_partial_args(char **args, size_t i)
+/*
+** Libera args parcialmente preenchido (0..i-1) e o próprio vetor.
+** Retorna NULL para facilitar retorno direto em args_from_tokens.
+*/
+static char	**free_args(char **args, size_t i)
 {
 	size_t	j;
 
@@ -44,45 +45,44 @@ static void	free_partial_args(char **args, size_t i)
 		j++;
 	}
 	free(args);
+	return (NULL);
 }
+
 /*
-Converte WORDs iniciais em vetor de argumentos terminado em NULL.
-Retorna NULL em falha de alocação.
- */
+** Constrói um vetor de strings (terminado em NULL) apenas com os tokens WORD
+** consecutivos do começo da lista. Este é um passo temporário até termos o
+** parser completo (pipes/redireções). Retorna NULL em falha de alocação.
+*/
 char	**args_from_tokens(t_token *lst)
 {
 	size_t	n;
 	size_t	i;
-	t_token	*cur;
 	char	**args;
 
-	n = count_leading_words(lst);
+	n = count_initial_words(lst);
 	args = (char **)malloc(sizeof(char *) * (n + 1));
 	if (!args)
 		return (NULL);
 	i = 0;
-	cur = lst;
-	while (cur && cur->type == WORD)
+	while (lst && lst->type == WORD)
 	{
-		if (cur->val)
-			args[i] = strdup(cur->val);
+		if (lst->val)
+			args[i] = strdup(lst->val);
 		else
 			args[i] = strdup("");
 		if (!args[i])
-		{
-			free_partial_args(args, i);
-			return (NULL);
-		}
+			return (free_args(args, i));
 		i++;
-		cur = cur->next;
+		lst = lst->next;
 	}
 	args[i] = NULL;
 	return (args);
 }
 
-
-/* Executa comando simples (builtin ou externo) a partir de args. */
-
+/*
+** Executa um comando simples a partir de args (builtin ou programa externo).
+** Não lida com pipes/redireções (será papel do parser e do executor).
+*/
 void	exec_simple(t_shell *sh, char **args)
 {
 	if (!args)
@@ -96,13 +96,14 @@ void	exec_simple(t_shell *sh, char **args)
 }
 
 /*
-Processa uma linha:
-- Tokeniza; trata erro de aspas.
-- Constrói args a partir de WORDs.
-- Executa comando simples.
-Retorna 0 sempre (valor de retorno reservado se quiser evoluir).
- */
-int	handle_line(t_shell *sh, char *line)
+** Fluxo de uma linha:
+**  - tokeniza com lex_line
+**  - em erro de aspas: reporta e sai
+**  - monta args apenas com WORDs iniciais
+**  - executa comando simples
+**  - libera recursos
+*/
+void	handle_line(t_shell *sh, char *line)
 {
 	t_token	*toks;
 	char	**args;
@@ -116,16 +117,15 @@ int	handle_line(t_shell *sh, char *line)
 		free_token_list(toks);
 		if (err)
 			fprintf(stderr, "minishell: syntax error: unclosed quotes\n");
-		return (0);
+		return ;
 	}
 	args = args_from_tokens(toks);
 	free_token_list(toks);
 	if (!args || !args[0])
 	{
 		free_tokens(args);
-		return (0);
+		return ;
 	}
 	exec_simple(sh, args);
 	free_tokens(args);
-	return (0);
 }

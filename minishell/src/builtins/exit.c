@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:48 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:45:02 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,6 @@ int	builtin_exit(t_shell *sh, char **argv)
 			code = strtol(argv[1], NULL, 10) & 0xFF;
 	}
 	if (isatty(STDIN_FILENO)) printf("exit\n");
-	shell_destroy(sh);
+	ms_destroy(sh);
 	_exit((int)code);
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_init.c                                       :+:      :+:    :+:   */
+/*   ms_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	shell_init(t_shell *sh, char **envp)
+void	ms_init(t_shell *sh, char **envp)
 {
 	memset(sh, 0, sizeof(*sh));
 	sh->envp = ms_env_dup(envp);
@@ -20,7 +20,7 @@ void	shell_init(t_shell *sh, char **envp)
 	sh->interactive = 0;
 }
 
-void	shell_destroy(t_shell *sh)
+void	ms_destroy(t_shell *sh)
 {
 	ms_free_strarr(sh->envp);
 	sh->envp = NULL;
