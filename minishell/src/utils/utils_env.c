@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:06 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/12 16:24:23 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,9 @@ char	*ms_getenv(char **envp, const char *key)
 	return (NULL);
 }
 
+/*
+ * atualiza ou cria uma variavel de ambiente no array sh->envp no formato KEY=VALUE
+*/
 int	ms_setenv(t_shell *sh, const char *k, const char *v)
 {
 	size_t	klen;
@@ -90,23 +93,26 @@ int	ms_unsetenv(t_shell *sh, const char *key)
 	size_t	i;
 	size_t	j;
 	size_t	klen;
-	int		f;
+	int		removed;
 
 	i = 0;
 	j = 0;
-	f = 0;
-	klen = strlen(key);
+	removed = 0;
+	klen = ft_strlen(key);
 	while (sh->envp && sh->envp[i])
 	{
-		if (!strncmp(sh->envp[i], key, klen) && sh->envp[i][klen] == '=')
+		if (!ft_strncmp(sh->envp[i], key, klen) && sh->envp[i][klen] == '=')
 		{
 			free(sh->envp[i]);
-			f = 1;
+			removed = 1;
 		}
 		else
 			sh->envp[j++] = sh->envp[i];
 		i++;
 	}
-	if (f) sh->envp[j] = NULL;
-	return (f ? 0 : -1);
+	if (removed)
+		sh->envp[j] = NULL;
+	if (removed)
+		return (0);
+	return (-1);
 }

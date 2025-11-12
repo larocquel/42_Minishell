@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:59 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:53:00 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/10 15:39:59 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,12 @@
 int	builtin_unset(t_shell *sh, char **argv)
 {
 	int	i;
-	int	rc;
 
 	i = 1;
-	rc = 0;
 	while (argv[i])
 	{
-		if (ms_unsetenv(sh, argv[i]) != 0) rc = 1;
+		ms_unsetenv(sh, argv[i]);
 		i++;
 	}
-	return (rc);
+	return (0);
 }
