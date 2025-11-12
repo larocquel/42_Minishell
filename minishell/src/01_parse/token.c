@@ -6,20 +6,52 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 14:17:00 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/08 16:41:58 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/12 23:23:56 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*lex_line(const char *s, int *err)
+/*
+** Lê o próximo token a partir de s[*i].
+** - Se operador: delega a tk_read_op.
+** - Senão: lê WORD com tk_read_word, cria token WORD via tk_new.
+** Em erro de alocação/aspas: retorna NULL (err já ajustado por tk_read_word).
+*/
+static t_token	*lex_next_token(const char *s, size_t *i, int *err)
 {
-	size_t			i;
-	t_token			*head;
-	t_token			*tail;
-	t_token			*node;
 	char			*val;
 	unsigned char	*mask;
+	t_token			*node;
+
+	if (tk_is_operator(s[*i]))
+		return (tk_read_op(s, i));
+	val = tk_read_word(s, i, err, &mask);
+	if (*err || !val)
+		return (NULL);
+	node = tk_new(WORD, val, mask);
+	if (!node)
+	{
+		free(val);
+		free(mask);
+		*err = 1;
+		return (NULL);
+	}
+	return (node);
+}
+
+/*
+** Varre a linha:
+** - pula espaços
+** - cria tokens (operadores ou WORD) e encadeia em lista
+** - em erro: libera a lista e retorna NULL
+*/
+t_token	*lex_line(const char *s, int *err)
+{
+	size_t	i;
+	t_token	*head;
+	t_token	*tail;
+	t_token	*node;
 
 	if (!s || !err)
 		return (NULL);
@@ -33,26 +65,17 @@ t_token	*lex_line(const char *s, int *err)
 			i++;
 		if (!s[i])
 			break ;
-		if (tk_is_operator(s[i]))
-		{
-			node = tk_read_op(s, &i);
-			if (!node)
-				return (free_token_list(head), NULL);
-		}
-		else
-		{
-			val = tk_read_word(s, &i, err, &mask);
-			if (*err || !val)
-				return (free_token_list(head), NULL);
-			node = tk_new(WORD, val, mask);
-			if (!node)
-				return (free(val), free(mask), free_token_list(head), NULL);
-		}
+		node = lex_next_token(s, &i, err);
+		if (!node)
+			return (free_token_list(head), NULL);
 		tk_push(&head, &tail, node);
 	}
 	return (head);
 }
 
+/*
+** Libera toda a lista de tokens (val, qmask e os nós).
+*/
 void	free_token_list(t_token *lst)
 {
 	t_token	*n;
@@ -67,12 +90,16 @@ void	free_token_list(t_token *lst)
 	}
 }
 
+/*
+** Libera um vetor NULL-terminated de strings (args).
+*/
 void	free_tokens(char **toks)
 {
-	size_t	i = 0;
+	size_t	i;
 
 	if (!toks)
 		return ;
+	i = 0;
 	while (toks[i])
 	{
 		free(toks[i]);

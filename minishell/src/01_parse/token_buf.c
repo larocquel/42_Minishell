@@ -6,12 +6,17 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:44:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/05 23:35:28 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/12 23:09:30 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+** Garante espaço em b->data para +1 char. Estratégia: dobra a capacidade
+** (cap = 16 inicial; depois cap *= 2). Copia conteúdo antigo e atualiza cap.
+** Em falha de malloc, seta *err = 1 e retorna 0.
+*/
 static int	tk_grow_str(t_str *b, int *err)
 {
 	char	*nb;
@@ -39,6 +44,10 @@ static int	tk_grow_str(t_str *b, int *err)
 	return (1);
 }
 
+/*
+** Acrescenta um caractere ao final do buffer de texto (t_str), expandindo
+** quando necessário. Retorna o ponteiro para b->data ou NULL em erro.
+*/
 char	*tk_add_str(t_str *b, char c, int *err)
 {
 	if (!tk_grow_str(b, err))
@@ -48,6 +57,11 @@ char	*tk_add_str(t_str *b, char c, int *err)
 	return (b->data);
 }
 
+/*
+** Garante espaço em m->data (máscara por char) para +1 byte.
+** Mesma estratégia de crescimento do texto: 16 inicial, depois dobra.
+** Em falha de malloc, seta *err = 1 e retorna 0.
+*/
 static int	tk_grow_mask(t_mask *m, int *err)
 {
 	unsigned char	*nb;
@@ -75,6 +89,10 @@ static int	tk_grow_mask(t_mask *m, int *err)
 	return (1);
 }
 
+/*
+** Acrescenta um byte de máscara (NQ/SQ/DQ) ao final de t_mask, expandindo
+** quando necessário. Retorna m->data ou NULL em erro.
+*/
 unsigned char	*tk_add_mask(t_mask *m, unsigned char v, int *err)
 {
 	if (!tk_grow_mask(m, err))
