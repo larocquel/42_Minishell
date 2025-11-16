@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 23:21:22 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:35:42 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,16 @@ typedef struct s_token
 {
 	t_toktype		type;
 	char			*val;
-	unsigned char	*qmask;
+	char			*qmask;
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_str
+typedef struct s_buf
 {
 	char	*data;
 	size_t	cap;
 	size_t	len;
-}	t_str;
-
-typedef struct s_mask
-{
-	unsigned char	*data;
-	size_t			cap;
-	size_t			len;
-}	t_mask;
+}	t_buf;
 
 typedef struct s_reader
 {
@@ -84,12 +77,12 @@ typedef struct s_reader
 
 typedef struct s_acc
 {
-	t_str		*b;
-	t_mask		*m;
+	t_buf		*b;
+	t_buf		*m;
 }	t_acc;
 
 
-/* ****************************    src/00_main/    ************************** */
+/* ****************************    src/01_main/    ************************** */
 
 //	main.c
 int				main(int ac, char **av, char **envp);
@@ -106,7 +99,7 @@ void			handle_line(t_shell *sh, char *line);
 //	ms_loop.c
 void			ms_loop(t_shell *sh);
 
-/* ****************************    src/01_parse/    ************************* */
+/* ****************************    src/02_parse/    ************************* */
 
 //	token.c
 t_token			*lex_line(const char *s, int *err);
@@ -117,18 +110,18 @@ void			free_tokens(char **toks);
 //	token_utils.c
 int				tk_is_space(int c);
 int				tk_is_operator(int c);
-t_token			*tk_new(t_toktype type, char *val, unsigned char *mask);
+t_token			*tk_new(t_toktype type, char *val, char *mask);
 void			tk_push(t_token **head, t_token **tail, t_token *node);
 
 //	token_read.c
 t_token			*tk_read_op(const char *s, size_t *i);
-char			*tk_read_word(const char *s, size_t *i, int *err, unsigned char **out_mask);
+char			*tk_read_word(const char *s, size_t *i, int *err, char **out_buf);
 
 //	token_buf.c
-char			*tk_add_str(t_str *b, char c, int *err);
-unsigned char	*tk_add_mask(t_mask *m, unsigned char v, int *err);
+char			*tk_add_str(t_buf *b, char c, int *err);
+char			*tk_add_mask(t_buf *m, char v, int *err);
 
-/* ****************************    src/02_exec/    ************************** */
+/* ****************************    src/03_exec/    ************************** */
 
 //	exec.c
 int				is_builtin(const char *cmd);
@@ -137,7 +130,7 @@ int				exec_external(t_shell *sh, char **argv);
 //	path.c
 char			*ms_search_path(char **envp, const char *cmd);
 
-/* ***************************    src/03_builtins/    *********************** */
+/* ***************************    src/04_builtins/    *********************** */
 
 //	builtins.c
 int				exec_builtin(t_shell *sh, char **argv);
@@ -166,14 +159,14 @@ int				builtin_pwd(void);
 //	unset.c
 int				builtin_unset(t_shell *sh, char **argv);
 
-/* ***************************    src/04_signals/    ************************ */
+/* ***************************    src/05_signals/    ************************ */
 
 //	signals.c
 void			sigint_handler(int signo);
 void			signals_setup_interactive(void);
 void			signals_setup_child(void);
 
-/* ****************************    src/05_utils/    ************************* */
+/* ****************************    src/06_utils/    ************************* */
 
 //	utils_env.c
 char			**ms_env_dup(char **envp);

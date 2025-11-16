@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:44:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 23:09:30 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:32:11 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** (cap = 16 inicial; depois cap *= 2). Copia conteúdo antigo e atualiza cap.
 ** Em falha de malloc, seta *err = 1 e retorna 0.
 */
-static int	tk_grow_str(t_str *b, int *err)
+static int	tk_grow_str(t_buf *b, int *err)
 {
 	char	*nb;
 	size_t	nc;
@@ -45,10 +45,10 @@ static int	tk_grow_str(t_str *b, int *err)
 }
 
 /*
-** Acrescenta um caractere ao final do buffer de texto (t_str), expandindo
+** Acrescenta um caractere ao final do buffer de texto (t_buf), expandindo
 ** quando necessário. Retorna o ponteiro para b->data ou NULL em erro.
 */
-char	*tk_add_str(t_str *b, char c, int *err)
+char	*tk_add_str(t_buf *b, char c, int *err)
 {
 	if (!tk_grow_str(b, err))
 		return (NULL);
@@ -62,9 +62,9 @@ char	*tk_add_str(t_str *b, char c, int *err)
 ** Mesma estratégia de crescimento do texto: 16 inicial, depois dobra.
 ** Em falha de malloc, seta *err = 1 e retorna 0.
 */
-static int	tk_grow_mask(t_mask *m, int *err)
+static int	tk_grow_mask(t_buf *m, int *err)
 {
-	unsigned char	*nb;
+	char	*nb;
 	size_t			nc;
 	size_t			i;
 
@@ -74,7 +74,7 @@ static int	tk_grow_mask(t_mask *m, int *err)
 		nc = 16;
 	else
 		nc = m->cap * 2;
-	nb = (unsigned char *)malloc(nc);
+	nb = malloc(nc);
 	if (!nb)
 		return (*err = 1, 0);
 	i = 0;
@@ -90,10 +90,10 @@ static int	tk_grow_mask(t_mask *m, int *err)
 }
 
 /*
-** Acrescenta um byte de máscara (NQ/SQ/DQ) ao final de t_mask, expandindo
+** Acrescenta um byte de máscara (NQ/SQ/DQ) ao final de t_buf, expandindo
 ** quando necessário. Retorna m->data ou NULL em erro.
 */
-unsigned char	*tk_add_mask(t_mask *m, unsigned char v, int *err)
+char	*tk_add_mask(t_buf *m, char v, int *err)
 {
 	if (!tk_grow_mask(m, err))
 		return (NULL);

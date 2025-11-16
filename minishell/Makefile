@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/02 22:51:07 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/12 21:57:48 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/16 16:13:24 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,35 +15,35 @@ CC			:= cc
 CFLAGS		:= -Wall -Wextra -Werror -g
 LDFLAGS		:= -lreadline
 
-INC_DIR		:= inc
+INC_DIR		:= src/00_inc
 SRC_DIR		:= src
 OBJ_DIR		:= obj
 LIBFT_DIR	:= libft
 LIBFT_A		:= $(LIBFT_DIR)/libft.a
 INCS		:= -I$(INC_DIR) -I$(LIBFT_DIR)
 
-SRCS := 	$(SRC_DIR)/00_main/main.c			\
-			$(SRC_DIR)/00_main/ms_init.c		\
-			$(SRC_DIR)/00_main/ms_loop.c		\
-			$(SRC_DIR)/00_main/ms_loop_helper.c	\
-			$(SRC_DIR)/01_parse/token.c			\
-			$(SRC_DIR)/01_parse/token_utils.c	\
-			$(SRC_DIR)/01_parse/token_read.c	\
-			$(SRC_DIR)/01_parse/token_buf.c		\
-			$(SRC_DIR)/02_exec/exec.c			\
-			$(SRC_DIR)/02_exec/path.c			\
-			$(SRC_DIR)/03_builtins/builtins.c	\
-			$(SRC_DIR)/03_builtins/echo.c		\
-			$(SRC_DIR)/03_builtins/pwd.c		\
-			$(SRC_DIR)/03_builtins/env.c		\
-			$(SRC_DIR)/03_builtins/exit.c		\
-			$(SRC_DIR)/03_builtins/cd.c			\
-			$(SRC_DIR)/03_builtins/export.c		\
-			$(SRC_DIR)/03_builtins/unset.c		\
-			$(SRC_DIR)/04_signals/signals.c		\
-			$(SRC_DIR)/05_utils/utils_str.c		\
-			$(SRC_DIR)/05_utils/utils_env.c		\
-			$(SRC_DIR)/05_utils/utils_num.c
+SRCS := 	$(SRC_DIR)/01_main/main.c			\
+			$(SRC_DIR)/01_main/ms_init.c		\
+			$(SRC_DIR)/01_main/ms_loop.c		\
+			$(SRC_DIR)/01_main/ms_loop_helper.c	\
+			$(SRC_DIR)/02_parse/token.c			\
+			$(SRC_DIR)/02_parse/token_utils.c	\
+			$(SRC_DIR)/02_parse/token_read.c	\
+			$(SRC_DIR)/02_parse/token_buf.c		\
+			$(SRC_DIR)/03_exec/exec.c			\
+			$(SRC_DIR)/03_exec/path.c			\
+			$(SRC_DIR)/04_builtins/builtins.c	\
+			$(SRC_DIR)/04_builtins/echo.c		\
+			$(SRC_DIR)/04_builtins/pwd.c		\
+			$(SRC_DIR)/04_builtins/env.c		\
+			$(SRC_DIR)/04_builtins/exit.c		\
+			$(SRC_DIR)/04_builtins/cd.c			\
+			$(SRC_DIR)/04_builtins/export.c		\
+			$(SRC_DIR)/04_builtins/unset.c		\
+			$(SRC_DIR)/05_signals/signals.c		\
+			$(SRC_DIR)/06_utils/utils_str.c		\
+			$(SRC_DIR)/06_utils/utils_env.c		\
+			$(SRC_DIR)/06_utils/utils_num.c
 
 
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

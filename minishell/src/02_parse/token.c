@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 14:17:00 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 23:23:56 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:24:20 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 static t_token	*lex_next_token(const char *s, size_t *i, int *err)
 {
 	char			*val;
-	unsigned char	*mask;
+	char			*mask;
 	t_token			*node;
 
 	if (tk_is_operator(s[*i]))

@@ -6,19 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:51:14 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 23:21:37 by leoaguia         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   token_read.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/05 22:51:14 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 23:40:00 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:22:45 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +97,7 @@ static int	tk_word_fill(t_reader *r, t_acc *a)
 /*
 ** Zera buffers de texto e máscara.
 */
-static void	tk_word_init(t_str *b, t_mask *m)
+static void	tk_word_init(t_buf *b, t_buf *m)
 {
 	b->data = NULL;
 	b->cap = 0;
@@ -121,14 +109,14 @@ static void	tk_word_init(t_str *b, t_mask *m)
 
 /*
 ** Lê um WORD removendo aspas. Em aspas não fechadas: *err=1 e retorna NULL.
-** Retorna a string em b.data e a máscara em *out_mask (mesmo tamanho).
+** Retorna a string em b.data e a máscara em *out_buf (mesmo tamanho).
 */
 char	*tk_read_word(
-	const char *s, size_t *i, int *err, unsigned char **out_mask)
+	const char *s, size_t *i, int *err, char **out_mask)
 {
 	t_reader	r;
-	t_str		b;
-	t_mask		m;
+	t_buf		b;
+	t_buf		m;
 	t_acc		a;
 
 	r.s = s;

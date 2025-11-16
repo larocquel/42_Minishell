@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:37:36 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 22:27:52 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 16:25:59 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	tk_is_operator(int c)
 ** Cria um novo token. Assume a posse de 'val' e 'mask' (podem ser NULL).
 ** Em falha, libera 'val' e 'mask' e retorna NULL.
 */
-t_token	*tk_new(t_toktype type, char *val, unsigned char *mask)
+t_token	*tk_new(t_toktype type, char *val, char *mask)
 {
 	t_token	*t;
 
