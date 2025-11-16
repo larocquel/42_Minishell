@@ -6,13 +6,13 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/09 16:45:02 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:29 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_exit(t_shell *sh, char **argv)
+int	builtin_exit(t_ms *sh, char **argv)
 {
 	long	code;
 

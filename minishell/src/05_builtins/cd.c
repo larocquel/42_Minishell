@@ -6,13 +6,13 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:34 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:35 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:27 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ms_set_pwd_vars(t_shell *sh, const char *oldpwd)
+static int	ms_set_pwd_vars(t_ms *sh, const char *oldpwd)
 {
 	char	buf[4096];
 
@@ -22,7 +22,7 @@ static int	ms_set_pwd_vars(t_shell *sh, const char *oldpwd)
 	return (0);
 }
 
-int	builtin_cd(t_shell *sh, char **argv)
+int	builtin_cd(t_ms *sh, char **argv)
 {
 	const char	*target;
 	char		oldpwd[4096];

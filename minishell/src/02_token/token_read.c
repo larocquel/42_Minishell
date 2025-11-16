@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:51:14 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/16 16:22:45 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 20:04:34 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 /*
 ** Lê |, <, <<, >, >> a partir de s[*i], avança o índice e cria o token.
 */
-t_token	*tk_read_op(const char *s, size_t *i)
+t_tk	*tk_read_op(const char *s, size_t *i)
 {
 	if (s[*i] == '|')
 		return ((*i)++, tk_new(PIPE, NULL, NULL));
 	if (s[*i] == '<')
 	{
 		if (s[*i + 1] == '<')
-			return (*i += 2, tk_new(HEREDOC, NULL, NULL));
-		return ((*i)++, tk_new(REDIR_IN, NULL, NULL));
+			return (*i += 2, tk_new(R_HDOC, NULL, NULL));
+		return ((*i)++, tk_new(R_IN, NULL, NULL));
 	}
 	if (s[*i] == '>')
 	{
 		if (s[*i + 1] == '>')
-			return (*i += 2, tk_new(REDIR_APP, NULL, NULL));
-		return ((*i)++, tk_new(REDIR_OUT, NULL, NULL));
+			return (*i += 2, tk_new(R_APP, NULL, NULL));
+		return ((*i)++, tk_new(R_OUT, NULL, NULL));
 	}
 	return (NULL);
 }

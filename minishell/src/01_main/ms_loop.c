@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:46 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/09 16:53:01 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:22 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** Atualiza a flag de modo interativo (para imprimir "exit" no Ctrl-D).
 */
-static void	ms_update_interactive(t_shell *sh)
+static void	ms_update_interactive(t_ms *sh)
 {
 	sh->interactive = isatty(STDIN_FILENO);
 }
@@ -24,7 +24,7 @@ static void	ms_update_interactive(t_shell *sh)
 ** Lê a linha do prompt; adiciona ao histórico se não for vazia.
 ** Retorna NULL em EOF (Ctrl-D).
 */
-static char	*ms_read_prompt_line(t_shell *sh)
+static char	*ms_read_prompt_line(t_ms *sh)
 {
 	char	*line;
 
@@ -41,7 +41,7 @@ static char	*ms_read_prompt_line(t_shell *sh)
 ** Loop principal: lê uma linha e delega o processamento ao handle_line().
 ** Sai com "exit" em modo interativo quando readline retorna NULL.
 */
-void	ms_loop(t_shell *sh)
+void	ms_loop(t_ms *sh)
 {
 	char	*line;
 

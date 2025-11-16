@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:06 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:32 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*ms_getenv(char **envp, const char *key)
 	return (NULL);
 }
 
-int	ms_setenv(t_shell *sh, const char *k, const char *v)
+int	ms_setenv(t_ms *sh, const char *k, const char *v)
 {
 	size_t	klen;
 	size_t	i;
@@ -85,7 +85,7 @@ int	ms_setenv(t_shell *sh, const char *k, const char *v)
 	return (0);
 }
 
-int	ms_unsetenv(t_shell *sh, const char *key)
+int	ms_unsetenv(t_ms *sh, const char *key)
 {
 	size_t	i;
 	size_t	j;

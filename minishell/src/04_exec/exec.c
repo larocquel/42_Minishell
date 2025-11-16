@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:22 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:23 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:23 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	is_builtin(const char *cmd)
 	return (0);
 }
 
-int	exec_external(t_shell *sh, char **argv)
+int	exec_external(t_ms *sh, char **argv)
 {
 	pid_t	pid;
 	int		st;

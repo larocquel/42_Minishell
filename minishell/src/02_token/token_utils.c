@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 22:37:36 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/16 16:25:59 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:25:05 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int	tk_is_operator(int c)
 ** Cria um novo token. Assume a posse de 'val' e 'mask' (podem ser NULL).
 ** Em falha, libera 'val' e 'mask' e retorna NULL.
 */
-t_token	*tk_new(t_toktype type, char *val, char *mask)
+t_tk	*tk_new(t_tktype type, char *val, char *mask)
 {
-	t_token	*t;
+	t_tk	*t;
 
-	t = (t_token *)malloc(sizeof(*t));
+	t = (t_tk *)malloc(sizeof(*t));
 	if (!t)
 	{
 		free(val);
@@ -54,7 +54,7 @@ t_token	*tk_new(t_toktype type, char *val, char *mask)
 /*
 ** Enfileira 'node' no final da lista indicada por (head, tail).
 */
-void	tk_push(t_token **head, t_token **tail, t_token *node)
+void	tk_push(t_tk **head, t_tk **tail, t_tk *node)
 {
 	if (!node)
 		return ;

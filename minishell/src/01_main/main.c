@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:41 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/09 16:48:54 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:13 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ volatile sig_atomic_t	g_sig = 0;
 
 int	main(int ac, char **av, char **envp)
 {
-	t_shell	sh;
+	t_ms	sh;
 
 	(void)av;
 	if (ac > 1)

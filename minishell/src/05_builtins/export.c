@@ -1,27 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ms_init.c                                       :+:      :+:    :+:   */
+/*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/02 22:51:50 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:51:51 by leoaguia         ###   ########.fr       */
+/*   Created: 2025/11/02 22:52:52 by leoaguia          #+#    #+#             */
+/*   Updated: 2025/11/16 19:20:30 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ms_init(t_ms *sh, char **envp)
+int	builtin_export(t_ms *sh, char **argv)
 {
-	memset(sh, 0, sizeof(*sh));
-	sh->envp = ms_env_dup(envp);
-	sh->last_status = 0;
-	sh->interactive = 0;
-}
+	int		i;
+	int		rc;
+	char	*eq;
 
-void	ms_destroy(t_ms *sh)
-{
-	ms_free_strarr(sh->envp);
-	sh->envp = NULL;
+	i = 1;
+	rc = 0;
+	if (!argv[1]) return (builtin_env(sh));
+	while (argv[i])
+	{
+		eq = strchr(argv[i], '=');
+		if (!eq || eq == argv[i])
+			rc = fprintf(stderr, "minishell: export: `%s': not a valid identifier\n",
+				argv[i]) || rc;
+		else
+		{
+			*eq = '\0';
+			ms_setenv(sh, argv[i], eq + 1);
+			*eq = '=';
+		}
+		i++;
+	}
+	return (rc ? 1 : 0);
 }

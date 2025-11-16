@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 14:17:00 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/16 16:24:20 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:27:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 ** - Senão: lê WORD com tk_read_word, cria token WORD via tk_new.
 ** Em erro de alocação/aspas: retorna NULL (err já ajustado por tk_read_word).
 */
-static t_token	*lex_next_token(const char *s, size_t *i, int *err)
+static t_tk	*lex_next_token(const char *s, size_t *i, int *err)
 {
 	char			*val;
 	char			*mask;
-	t_token			*node;
+	t_tk			*node;
 
 	if (tk_is_operator(s[*i]))
 		return (tk_read_op(s, i));
@@ -46,12 +46,12 @@ static t_token	*lex_next_token(const char *s, size_t *i, int *err)
 ** - cria tokens (operadores ou WORD) e encadeia em lista
 ** - em erro: libera a lista e retorna NULL
 */
-t_token	*lex_line(const char *s, int *err)
+t_tk	*lex_line(const char *s, int *err)
 {
 	size_t	i;
-	t_token	*head;
-	t_token	*tail;
-	t_token	*node;
+	t_tk	*head;
+	t_tk	*tail;
+	t_tk	*node;
 
 	if (!s || !err)
 		return (NULL);
@@ -76,9 +76,9 @@ t_token	*lex_line(const char *s, int *err)
 /*
 ** Libera toda a lista de tokens (val, qmask e os nós).
 */
-void	free_token_list(t_token *lst)
+void	free_token_list(t_tk *lst)
 {
-	t_token	*n;
+	t_tk	*n;
 
 	while (lst)
 	{

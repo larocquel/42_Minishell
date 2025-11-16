@@ -6,13 +6,13 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:31 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:32 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:20:24 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	exec_builtin(t_shell *sh, char **argv)
+int	exec_builtin(t_ms *sh, char **argv)
 {
 	if (!strcmp(argv[0], "echo")) return (builtin_echo(argv));
 	if (!strcmp(argv[0], "pwd")) return (builtin_pwd());

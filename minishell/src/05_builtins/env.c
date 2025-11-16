@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/02 22:52:52 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:53 by leoaguia         ###   ########.fr       */
+/*   Created: 2025/11/02 22:52:41 by leoaguia          #+#    #+#             */
+/*   Updated: 2025/11/16 19:20:28 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_export(t_shell *sh, char **argv)
+int	builtin_env(t_ms *sh)
 {
-	int		i;
-	int		rc;
-	char	*eq;
+	size_t	i;
 
-	i = 1;
-	rc = 0;
-	if (!argv[1]) return (builtin_env(sh));
-	while (argv[i])
+	i = 0;
+	while (sh->envp && sh->envp[i])
 	{
-		eq = strchr(argv[i], '=');
-		if (!eq || eq == argv[i])
-			rc = fprintf(stderr, "minishell: export: `%s': not a valid identifier\n",
-				argv[i]) || rc;
-		else
-		{
-			*eq = '\0';
-			ms_setenv(sh, argv[i], eq + 1);
-			*eq = '=';
-		}
+		if (strchr(sh->envp[i], '=')) printf("%s\n", sh->envp[i]);
 		i++;
 	}
-	return (rc ? 1 : 0);
+	return (0);
 }

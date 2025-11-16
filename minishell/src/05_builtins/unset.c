@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/02 22:52:41 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:42 by leoaguia         ###   ########.fr       */
+/*   Created: 2025/11/02 22:52:59 by leoaguia          #+#    #+#             */
+/*   Updated: 2025/11/16 19:20:30 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_env(t_shell *sh)
+int	builtin_unset(t_ms *sh, char **argv)
 {
-	size_t	i;
+	int	i;
+	int	rc;
 
-	i = 0;
-	while (sh->envp && sh->envp[i])
+	i = 1;
+	rc = 0;
+	while (argv[i])
 	{
-		if (strchr(sh->envp[i], '=')) printf("%s\n", sh->envp[i]);
+		if (ms_unsetenv(sh, argv[i]) != 0) rc = 1;
 		i++;
 	}
-	return (0);
+	return (rc);
 }

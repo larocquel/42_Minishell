@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/08 16:17:52 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/09 16:53:25 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:25:00 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** como pipe/redireção ou o fim da lista). Usado para saber o tamanho do vetor
 ** de argumentos que será alocado em args_from_tokens.
 */
-static size_t	count_initial_words(t_token *lst)
+static size_t	count_initial_words(t_tk *lst)
 {
 	size_t	n;
 
@@ -53,7 +53,7 @@ static char	**free_args(char **args, size_t i)
 ** consecutivos do começo da lista. Este é um passo temporário até termos o
 ** parser completo (pipes/redireções). Retorna NULL em falha de alocação.
 */
-char	**args_from_tokens(t_token *lst)
+char	**args_from_tokens(t_tk *lst)
 {
 	size_t	n;
 	size_t	i;
@@ -83,7 +83,7 @@ char	**args_from_tokens(t_token *lst)
 ** Executa um comando simples a partir de args (builtin ou programa externo).
 ** Não lida com pipes/redireções (será papel do parser e do executor).
 */
-void	exec_simple(t_shell *sh, char **args)
+void	exec_simple(t_ms *sh, char **args)
 {
 	if (!args)
 		return ;
@@ -103,9 +103,9 @@ void	exec_simple(t_shell *sh, char **args)
 **  - executa comando simples
 **  - libera recursos
 */
-void	handle_line(t_shell *sh, char *line)
+void	handle_line(t_ms *sh, char *line)
 {
-	t_token	*toks;
+	t_tk	*toks;
 	char	**args;
 	int		err;
 

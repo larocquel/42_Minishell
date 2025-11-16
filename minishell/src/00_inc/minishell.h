@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/16 16:35:42 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/16 19:30:27 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,30 +36,30 @@
 
 extern volatile sig_atomic_t	g_sig;
 
-typedef struct s_shell
+typedef struct s_ms
 {
 	char	**envp;
 	int		last_status;
 	int		interactive;
-}	t_shell;
+}	t_ms;
 
-typedef enum e_toktype
+typedef enum e_tktype
 {
 	WORD,
 	PIPE,
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APP,
-	HEREDOC
-}	t_toktype;
+	R_IN,
+	R_OUT,
+	R_APP,
+	R_HDOC
+}	t_tktype;
 
-typedef struct s_token
+typedef struct s_tk
 {
-	t_toktype		type;
+	t_tktype		type;
 	char			*val;
 	char			*qmask;
-	struct s_token	*next;
-}	t_token;
+	struct s_tk	*next;
+}	t_tk;
 
 typedef struct s_buf
 {
@@ -88,92 +88,95 @@ typedef struct s_acc
 int				main(int ac, char **av, char **envp);
 
 //	ms_init.c
-void			ms_init(t_shell *sh, char **envp);
-void			ms_destroy(t_shell *sh);
+void			ms_init(t_ms *sh, char **envp);
+void			ms_destroy(t_ms *sh);
 
 //	ms_loop_helper.c
-char			**args_from_tokens(t_token *lst);
-void			exec_simple(t_shell *sh, char **args);
-void			handle_line(t_shell *sh, char *line);
+char			**args_from_tokens(t_tk *lst);
+void			exec_simple(t_ms *sh, char **args);
+void			handle_line(t_ms *sh, char *line);
 
 //	ms_loop.c
-void			ms_loop(t_shell *sh);
+void			ms_loop(t_ms *sh);
 
-/* ****************************    src/02_parse/    ************************* */
+/* ****************************    src/02_token/    ************************* */
 
 //	token.c
-t_token			*lex_line(const char *s, int *err);
-void			free_token_list(t_token *lst);
+t_tk			*lex_line(const char *s, int *err);
+void			free_token_list(t_tk *lst);
 void			free_tokens(char **toks);
 
 
 //	token_utils.c
 int				tk_is_space(int c);
 int				tk_is_operator(int c);
-t_token			*tk_new(t_toktype type, char *val, char *mask);
-void			tk_push(t_token **head, t_token **tail, t_token *node);
+t_tk			*tk_new(t_tktype type, char *val, char *mask);
+void			tk_push(t_tk **head, t_tk **tail, t_tk *node);
 
 //	token_read.c
-t_token			*tk_read_op(const char *s, size_t *i);
+t_tk			*tk_read_op(const char *s, size_t *i);
 char			*tk_read_word(const char *s, size_t *i, int *err, char **out_buf);
 
 //	token_buf.c
 char			*tk_add_str(t_buf *b, char c, int *err);
 char			*tk_add_mask(t_buf *m, char v, int *err);
 
-/* ****************************    src/03_exec/    ************************** */
+/* ****************************    src/03_parse/    ************************* */
+
+
+/* ****************************    src/04_exec/    ************************** */
 
 //	exec.c
 int				is_builtin(const char *cmd);
-int				exec_external(t_shell *sh, char **argv);
+int				exec_external(t_ms *sh, char **argv);
 
 //	path.c
 char			*ms_search_path(char **envp, const char *cmd);
 
-/* ***************************    src/04_builtins/    *********************** */
+/* ***************************    src/05_builtins/    *********************** */
 
 //	builtins.c
-int				exec_builtin(t_shell *sh, char **argv);
+int				exec_builtin(t_ms *sh, char **argv);
 
 //	cd.c
-int				builtin_cd(t_shell *sh, char **argv);
+int				builtin_cd(t_ms *sh, char **argv);
 
 //	echo.c
 int				builtin_echo(char **argv);
 
 
 //	env.c
-int				builtin_env(t_shell *sh);
+int				builtin_env(t_ms *sh);
 
 
 //	exit.c
-int				builtin_exit(t_shell *sh, char **argv);
+int				builtin_exit(t_ms *sh, char **argv);
 
 
 //	export.c
-int				builtin_export(t_shell *sh, char **argv);
+int				builtin_export(t_ms *sh, char **argv);
 
 //	pwd.c
 int				builtin_pwd(void);
 
 //	unset.c
-int				builtin_unset(t_shell *sh, char **argv);
+int				builtin_unset(t_ms *sh, char **argv);
 
-/* ***************************    src/05_signals/    ************************ */
+/* ***************************    src/06_signals/    ************************ */
 
 //	signals.c
 void			sigint_handler(int signo);
 void			signals_setup_interactive(void);
 void			signals_setup_child(void);
 
-/* ****************************    src/06_utils/    ************************* */
+/* ****************************    src/07_utils/    ************************* */
 
 //	utils_env.c
 char			**ms_env_dup(char **envp);
 void			ms_free_strarr(char **arr);
 char			*ms_getenv(char **envp, const char *key);
-int				ms_setenv(t_shell *sh, const char *k, const char *v);
-int				ms_unsetenv(t_shell *sh, const char *key);
+int				ms_setenv(t_ms *sh, const char *k, const char *v);
+int				ms_unsetenv(t_ms *sh, const char *key);
 
 //	utils_num.c
 int				ms_isnumber(const char *s);
