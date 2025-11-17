@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:56 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/07 17:10:22 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/17 14:00:59 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	builtin_pwd(char **argv)
 {
 	char	*cwd;
-	
+
 	(void)argv;
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)

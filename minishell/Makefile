@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/02 22:51:07 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/04 19:57:21 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/13 16:37:07 by davmendo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,8 +35,10 @@ SRCS := 	$(SRC_DIR)/main.c				\
 			$(SRC_DIR)/builtins/env.c		\
 			$(SRC_DIR)/builtins/exit.c		\
 			$(SRC_DIR)/builtins/cd.c		\
-			$(SRC_DIR)/builtins/export.c	\
 			$(SRC_DIR)/builtins/unset.c		\
+			$(SRC_DIR)/builtins/export.c                    \
+                	$(SRC_DIR)/builtins/export_mark.c               \
+                	$(SRC_DIR)/builtins/export_print.c              \
 			$(SRC_DIR)/utils/utils_str.c	\
 			$(SRC_DIR)/utils/utils_env.c	\
 			$(SRC_DIR)/utils/utils_num.c	\

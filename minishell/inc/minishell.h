@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:51:19 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/06 16:34:34 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/13 16:34:43 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int		builtin_env(t_shell *sh, char **argv);
 int		builtin_exit(t_shell *sh, char **argv);
 int		builtin_cd(t_shell *sh, char **argv);
 int		builtin_export(t_shell *sh, char **argv);
+int		ms_export_no_args(t_shell *sh);
+int		ms_export_mark_no_value(t_shell *sh, const char *key);
 int		builtin_unset(t_shell *sh, char **argv);
 
 #endif
