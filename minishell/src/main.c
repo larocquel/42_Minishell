@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/17 18:26:34 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/17 22:40:18 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	run_shell(t_shell *sh)
 {
 	char *line;
 
+	setup_signals_interactive();	// Ativa os handlers (modo interativo)
+
 	(void)sh;	//	Ainda não usamos
 	while (1)
 	{
@@ -49,6 +51,12 @@ void	run_shell(t_shell *sh)
 		{
 			printf("exit\n");
 			break ;
+		}
+		// CTRL-C ou se só deu ENTER, a linha pode vir vazia -> só ignora
+		if (*line == '\0')
+		{
+			free(line);
+			continue;
 		}
 		//	Se a linha não for vazia, adiciona ao histórico
 		if (*line != '\0')
