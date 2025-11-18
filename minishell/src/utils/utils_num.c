@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/02 22:52:11 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/17 16:31:01 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 int	ms_isnumber(const char *s)
 {
-	if (!s || !*s) return (0);
-	if (*s == '+' || *s == '-') s++;
+	if (!s || !*s)
+		return (0);
+	if (*s == '+' || *s == '-')
+		s++;
 	while (*s)
 	{
-		if (*s < '0' || *s > '9') return (0);
+		if (*s < '0' || *s > '9')
+			return (0);
 		s++;
 	}
 	return (1);

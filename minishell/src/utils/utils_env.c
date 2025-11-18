@@ -6,11 +6,20 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/12 16:24:23 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/18 14:57:51 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+ * envp é um array de strings terminado em NULL 
+ * ex: envp[0] = "PATH=/usr/bin:/bin";
+ * criar uma copia indepedente do envp
+ * duplica o array de ponteiros (char **)
+ * duplica tambem cada string ("PATH=...", "HOME=...")
+ * size_t n = numero de variaveis de ambiente
+*/
 
 char	**ms_env_dup(char **envp)
 {
@@ -19,29 +28,48 @@ char	**ms_env_dup(char **envp)
 	char	**dup;
 
 	n = 0;
-	while (envp && envp[n]) n++;
+	while (envp && envp[n])
+		n++;
 	dup = (char **)calloc(n + 1, sizeof(char *));
-	if (!dup) return (NULL);
+	if (!dup)
+		return (NULL);
 	i = 0;
 	while (i < n)
 	{
 		dup[i] = strdup(envp[i]);
-		if (!dup[i]) return (ms_free_strarr(dup), NULL);
+		if (!dup[i])
+			return (ms_free_strarr(dup), NULL);
 		i++;
 	}
 	dup[n] = NULL;
 	return (dup);
 }
 
+/*
+ * free da memória um array de strings (char **) terminado NULL
+*/
+
 void	ms_free_strarr(char **arr)
 {
 	size_t	i;
 
-	if (!arr) return ;
+	if (!arr)
+		return ;
 	i = 0;
-	while (arr[i]) { free(arr[i]); i++; }
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
 	free(arr);
 }
+
+/*
+ * procurar dentro do envp a variavel KEY
+ * devolver apenas o valor dessa variavel (depois do =)
+ * ex: ms_getenv(envp, "PATH") deve devolver "/usr/bin:/bin"
+ * se não existir devolve NULL
+*/
 
 char	*ms_getenv(char **envp, const char *key)
 {
@@ -57,62 +85,4 @@ char	*ms_getenv(char **envp, const char *key)
 		i++;
 	}
 	return (NULL);
-}
-
-/*
- * atualiza ou cria uma variavel de ambiente no array sh->envp no formato KEY=VALUE
-*/
-int	ms_setenv(t_shell *sh, const char *k, const char *v)
-{
-	size_t	klen;
-	size_t	i;
-	char	*nv;
-	char	**newtab;
-
-	if (!k || !*k || strchr(k, '=')) return (-1);
-	nv = ms_strjoin3(k, "=", v ? v : "");
-	if (!nv) return (-1);
-	klen = strlen(k);
-	i = 0;
-	while (sh->envp && sh->envp[i])
-	{
-		if (!strncmp(sh->envp[i], k, klen) && sh->envp[i][klen] == '=')
-			return (free(sh->envp[i]), sh->envp[i] = nv, 0);
-		i++;
-	}
-	newtab = (char **)realloc(sh->envp, sizeof(char *) * (i + 2));
-	if (!newtab) return (free(nv), -1);
-	sh->envp = newtab;
-	sh->envp[i] = nv;
-	sh->envp[i + 1] = NULL;
-	return (0);
-}
-
-int	ms_unsetenv(t_shell *sh, const char *key)
-{
-	size_t	i;
-	size_t	j;
-	size_t	klen;
-	int		removed;
-
-	i = 0;
-	j = 0;
-	removed = 0;
-	klen = ft_strlen(key);
-	while (sh->envp && sh->envp[i])
-	{
-		if (!ft_strncmp(sh->envp[i], key, klen) && sh->envp[i][klen] == '=')
-		{
-			free(sh->envp[i]);
-			removed = 1;
-		}
-		else
-			sh->envp[j++] = sh->envp[i];
-		i++;
-	}
-	if (removed)
-		sh->envp[j] = NULL;
-	if (removed)
-		return (0);
-	return (-1);
 }
