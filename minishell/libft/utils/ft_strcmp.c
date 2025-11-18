@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_num.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/02 22:52:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/18 20:06:28 by davmendo         ###   ########.fr       */
+/*   Created: 2025/11/18 19:02:07 by davmendo          #+#    #+#             */
+/*   Updated: 2025/11/18 19:33:33 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	ms_isnumber(const char *s)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	if (!s || !*s)
-		return (0);
-	if (*s == '+' || *s == '-')
-		s++;
-	while (*s)
+	int	i;
+
+	i = 0;
+	while (s1[i] == s2[i] && s1[i] != '\0' && s2[i] != '\0')
 	{
-		if (*s < '0' || *s > '9')
-			return (0);
-		s++;
+		i++;
 	}
-	return (1);
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }

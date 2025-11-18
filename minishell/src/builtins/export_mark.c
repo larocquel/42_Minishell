@@ -6,11 +6,20 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:31:21 by davmendo          #+#    #+#             */
-/*   Updated: 2025/11/17 14:00:41 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/18 23:39:27 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+	*procura uma variavel de ambiente por nome, ignorando o valor depois do '='
+	*const char *entry = string de envp[i], ou seja, KEY=VALUE
+	*const char *key = o nome da variavel que quer comparar
+	*retorna 0 se todas as keys forem iguais
+	*valor negativo se entry < key
+	*valor positivo se entry > key
+*/
 
 static int	ms_env_keycmp(const char *entry, const char *key)
 {
@@ -27,6 +36,13 @@ static int	ms_env_keycmp(const char *entry, const char *key)
 		return (0);
 	return ((unsigned char)entry[i] - (unsigned char)key[i]);
 }
+/*
+	*verifica se existe no envp uma variavel com o nome key
+	*char **envp = array de strings do ambiente, no formato KEY=VALUE
+	*const char * key = a variavel quer saber se existe ex: "PATH"
+	*retorna 1 se ja existe uma variavel com nome key em envp
+	*retorna 0 se nao existe essa key no ambiente
+*/
 
 static int	ms_env_has_key_or_novalue(char **envp, const char *key)
 {
@@ -45,10 +61,12 @@ static int	ms_env_has_key_or_novalue(char **envp, const char *key)
 }
 
 /*
- * export VAR
- * - se KEY já existir (KEY ou KEY=VAL), não faz nada.
- * - Se não existir, adiciona "KEY" (sem '=') ao envp.
+	*garante que uma variavel exista na lista envp apenas com o nome sem o VALUE
+	*marca a KEY como exportada sem o VALUE
+	*se a KEY ja existir em envp, nao muda nada e retorna 0
+	*se nao existir adiciona KEY sem VALUE ao final de envp
  */
+
 int	ms_export_mark_no_value(t_shell *sh, const char *key)
 {
 	size_t	i;

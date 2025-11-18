@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
+#    By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 17:39:32 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/02 15:37:20 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/18 19:28:08 by davmendo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,7 @@ SRCS = \
 ./utils/ft_strlen.c \
 ./utils/ft_strmapi.c \
 ./utils/ft_strncmp.c \
+./utils/ft_strcmp.c \
 ./utils/ft_strnstr.c \
 ./utils/ft_strrchr.c \
 ./utils/ft_strtrim.c \

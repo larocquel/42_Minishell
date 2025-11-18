@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/18 14:57:51 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/18 19:08:22 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ char	**ms_env_dup(char **envp)
 	n = 0;
 	while (envp && envp[n])
 		n++;
-	dup = (char **)calloc(n + 1, sizeof(char *));
+	dup = (char **)ft_calloc(n + 1, sizeof(char *));
 	if (!dup)
 		return (NULL);
 	i = 0;
 	while (i < n)
 	{
-		dup[i] = strdup(envp[i]);
+		dup[i] = ft_strdup(envp[i]);
 		if (!dup[i])
 			return (ms_free_strarr(dup), NULL);
 		i++;
@@ -76,11 +76,11 @@ char	*ms_getenv(char **envp, const char *key)
 	size_t	klen;
 	size_t	i;
 
-	klen = strlen(key);
+	klen = ft_strlen(key);
 	i = 0;
 	while (envp && envp[i])
 	{
-		if (!strncmp(envp[i], key, klen) && envp[i][klen] == '=')
+		if (!ft_strncmp(envp[i], key, klen) && envp[i][klen] == '=')
 			return (envp[i] + klen + 1);
 		i++;
 	}

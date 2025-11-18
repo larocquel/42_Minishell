@@ -6,12 +6,20 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:30:50 by davmendo          #+#    #+#             */
-/*   Updated: 2025/11/13 16:30:53 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/18 23:38:59 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/*
+	*verifica se a string passada em arg e um nome identificador valido
+	*nao pode ser null nem vazia
+	*nao pode comcar com = nem numero
+	*o primeiro caractere tem que ser letra ou '_'
+	*os proximos caracteres ate encontrar = ou NULL 
+	*tem que ser letra, numero ou '_'
+*/
 static int	ms_is_valid_identifier(const char *arg)
 {
 	size_t	i;
@@ -39,6 +47,13 @@ static int	ms_export_error(const char *arg)
 	ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 	return (1);
 }
+/*
+	*processa o argumento passado para o export
+	*e atualiza as variavies de ambiente
+	*char *eq = equal, um ponteiro para posicao do caratecere '='
+	*eq serve para separar KEY=VALUE na mesma string
+	*ret = return, guarda o valor de retorno para sabe se deu erro ou nao
+*/
 
 static int	ms_export_process_arg(t_shell *sh, char *arg)
 {
@@ -63,6 +78,14 @@ static int	ms_export_process_arg(t_shell *sh, char *arg)
 	}
 	return (0);
 }
+/*
+	*percorre todos os argumentos, 
+	*chama a funcao process_arg para cada arg e ajusta o last_status
+	*i = 1 porque o argv[0] e o nome do comando
+	*se qualquer argumentou falhou, exit status 1
+	*se todos foram processados com sucesso = 0
+	*retorna sh->last_status que e o codigo de saida builtin export
+*/
 
 static int	ms_export_with_args(t_shell *sh, char **argv)
 {
@@ -83,6 +106,13 @@ static int	ms_export_with_args(t_shell *sh, char **argv)
 		sh->last_status = 0;
 	return (sh->last_status);
 }
+/*
+	*implementacao principal do comando export
+	*decide qual comportamento usar dependendo dos argumentos
+	*se algo estiver invalido retorna 1(erro)
+	*se nao existe av[1] chama a funcao para listar as variaveis de ambiente
+	*se existe av[1] percorre os argumentos com a funcao process_arg
+*/
 
 int	builtin_export(t_shell *sh, char **argv)
 {

@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 16:13:30 by davmendo          #+#    #+#             */
-/*   Updated: 2025/11/18 15:25:41 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/18 23:36:47 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static int	ms_update_env(t_shell *sh, const char *k, size_t klen, char *nv)
 	i = 0;
 	while (sh->envp && sh->envp[i])
 	{
-		if (!ft_strncmp(sh->envp[i], k, klen) \
-			&& sh->envp[i][klen] == '=')
+		if (!ft_strncmp(sh->envp[i], k, klen) && sh->envp[i][klen] == '=')
 		{
 			free(sh->envp[i]);
 			sh->envp[i] = nv;
@@ -91,6 +90,10 @@ int	ms_setenv(t_shell *sh, const char *k, const char *v)
 		i++;
 	return (ms_add_new_env(sh, nv, i));
 }
+/*
+	*remove do sh>envp todas as variaveis de ambiente com o nome key
+	*devolve 0 se devolveu e -1 se nao encontro nada
+*/
 
 int	ms_unsetenv(t_shell *sh, const char *key)
 {
