@@ -6,11 +6,24 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/17 22:40:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/18 21:27:35 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+Pra ver se os tokens estão saindo certo,
+podemos temporariamente imprimir os tokens
+*/
+static void	debug_print_tokens(t_token *lst)
+{
+	while (lst)
+	{
+		printf("[type=%d]'%s'\n", lst->type, lst->value);
+		lst = lst->next;
+	}
+}
 
 /*
 Função auxiliar para checar se a string é "exit"-
@@ -37,30 +50,33 @@ Loop principal do shell
 */
 void	run_shell(t_shell *sh)
 {
-	char *line;
-
-	setup_signals_interactive();	// Ativa os handlers (modo interativo)
+	char	*line;
+	t_token	*tokens;
 
 	(void)sh;	//	Ainda não usamos
+	setup_signals_interactive();	// Ativa os handlers (modo interativo)
 	while (1)
 	{
 		//	readline() - Mostra o prompt e espera o user digitar
 		line = readline("minishell$ ");
+
 		//	Se line == NULL, significa EOF (ctrl-D)
 		if (line == NULL)
 		{
 			printf("exit\n");
 			break ;
 		}
+
 		// CTRL-C ou se só deu ENTER, a linha pode vir vazia -> só ignora
 		if (*line == '\0')
 		{
 			free(line);
 			continue;
 		}
+
 		//	Se a linha não for vazia, adiciona ao histórico
-		if (*line != '\0')
-			add_history(line);
+		add_history(line);
+
 		//	Se o comando for "exit", sai do loop
 		if (is_exit_cmd(line))
 		{
@@ -68,6 +84,20 @@ void	run_shell(t_shell *sh)
 			printf("exit\n");
 			break ;
 		}
+
+		//	Lexer: tranforma a linha em tokens
+		tokens = tokenize_line(line);
+		if (!tokens)
+		{
+			printf("Erro no lexer\n");
+			free(line);
+			continue;
+		}
+
+		//	Debug: imprime tokens
+		debug_print_tokens(tokens);
+		free_tokens(tokens);
+
 		//	Por enquanto só mostramos o que o user digitou
 		printf("Digitou: %s\n", line);
 		free(line);
