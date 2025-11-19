@@ -6,11 +6,18 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 22:52:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/17 14:37:38 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/19 16:59:13 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+ * verifica se e uma string com numero valido para o builtin exit
+ * usada para validar o argumento antes de converte-lo
+ * se nao for numerico, imprime o erro e sai com codigo 255
+ * aceita um sinal '+' ou '-' somente nas primeiras posicoes
+*/
 
 static int	is_numeric(const char *s)
 {
@@ -32,6 +39,12 @@ static int	is_numeric(const char *s)
 	return (1);
 }
 
+/*
+ * verifica se a parte numerica da string tem overflow ou underflow
+ * retorna 1 se houver overflow ou underflow
+ * retorna 0 caso o contrario
+*/
+
 static int	check_overflow(const char *str, int sign)
 {
 	int		i;
@@ -52,15 +65,20 @@ static int	check_overflow(const char *str, int sign)
 		return (1);
 	return (0);
 }
+/*
+ * analisa a string do argumento de exit e converte para um long
+ * retornando 1 em sucesso e 0 se detectar overflow
+*/
 
-static int	parse_exit_arg(const char *str, long *result)
+static int	parse_exit_arg(const char *str, long long *result)
 {
-	int		i;
-	int		sign;
+	int			i;
+	int			sign;
+	long long	res;
 
 	i = 0;
 	sign = 1;
-	*result = 0;
+	res = 0;
 	if (str[i] == '+' || str[i] == '-')
 	{
 		if (str[i] == '-')
@@ -70,28 +88,25 @@ static int	parse_exit_arg(const char *str, long *result)
 	if (check_overflow(&str[i], sign))
 		return (0);
 	while (str[i])
-	{
-		*result = *result * 10 + (str[i] - '0');
-		i++;
-	}
-	*result *= sign;
+		res = res * 10 + sign * (str[i++] - '0');
+	*result = res;
 	return (1);
 }
 
 static void	exit_with_error(t_shell *sh, char *arg, int code)
 {
+	if (sh->interactive)
+		ft_putendl_fd("exit", STDERR_FILENO);
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 	ft_putstr_fd(arg, STDERR_FILENO);
 	ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-	if (sh->interactive)
-		ft_putendl_fd("exit", STDERR_FILENO);
 	shell_destroy(sh);
 	exit(code);
 }
 
 int	builtin_exit(t_shell *sh, char **argv)
 {
-	long	code;
+	long long	code;
 
 	if (argv[1] && !is_numeric(argv[1]))
 		exit_with_error(sh, argv[1], 255);
@@ -106,9 +121,7 @@ int	builtin_exit(t_shell *sh, char **argv)
 	}
 	if (sh->interactive)
 		ft_putendl_fd("exit", STDERR_FILENO);
-	if (argv[1])
-		code = ft_atoi(argv[1]);
-	else
+	if (!argv[1])
 		code = sh->last_status;
 	shell_destroy(sh);
 	exit((int)(code & 0xFF));
