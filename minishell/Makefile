@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/18 21:51:22 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/19 17:40:24 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,9 +50,10 @@ INCLUDES	= -Iinclude -I$(LIBFT_DIR)
 ###############################################################
 # Lista de todos os .c do projeto (adiciona mais conforme criar)
 ###############################################################
-SRC			= $(SRC_DIR)/main.c \
-			  $(SRC_DIR)/signals.c \
-			  $(SRC_DIR)/lexer.c
+SRC			= $(SRC_DIR)/main.c		\
+			  $(SRC_DIR)/signals.c	\
+			  $(SRC_DIR)/lexer.c	\
+			  $(SRC_DIR)/parser.c
 
 ###############################################################
 # Conversão automática:

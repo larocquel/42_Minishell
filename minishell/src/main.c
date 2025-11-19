@@ -6,11 +6,36 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/19 14:40:48 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/19 17:47:26 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+Debug: Para printar a estrutura de comandos
+*/
+static void	debug_print_cmds(t_cmd *cmds)
+{
+	size_t	i;
+
+	while (cmds)
+	{
+		printf("CMD:\n");
+		i = 0;
+		while (cmds->argv && cmds->argv[i])
+		{
+			printf("  argv[%zu] = (%s)\n", i, cmds->argv[i]);
+			i++;
+		}
+		cmds = cmds->next;
+	}
+}
+
+
+/*
+Debug: Retorna a string do tipo identificado
+*/
 
 static const char	*token_type_str(t_tktype type)
 {
@@ -67,6 +92,7 @@ void	run_shell(t_shell *sh)
 {
 	char	*line;
 	t_token	*tokens;
+	t_cmd	*cmds;
 
 	(void)sh;	//	Ainda não usamos
 	setup_signals_interactive();	// Ativa os handlers (modo interativo)
@@ -111,6 +137,20 @@ void	run_shell(t_shell *sh)
 
 		//	Debug: imprime tokens
 		debug_print_tokens(tokens);
+
+		//	Parser: Verifica sintaxe e separa linha em cmds
+		cmds = parse_pipeline(tokens);
+		if (!cmds)
+		{
+			printf("Erro no parser\n");
+			free_tokens(tokens);
+			free(line);
+			continue;
+		}
+		//	Debug: imprime cmds
+		debug_print_cmds(cmds);
+
+		free_cmds(cmds);
 		free_tokens(tokens);
 		free(line);
 	}
