@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/18 23:36:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:55:55 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Usado para WORD simples e para operadores com strings fixas.
 */
 static t_token	*token_new(t_tktype type, const char *start, size_t len)
 {
-	t_token *tok;
+	t_token	*tok;
 	size_t	i;
 
 	tok = malloc(sizeof(t_token));
@@ -68,7 +68,7 @@ Adiciona um token ao final da lista
 */
 static int	token_add_back(t_token **lst, t_token *new_tok)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	if (!new_tok)
 		return (0);
@@ -104,7 +104,7 @@ void	free_tokens(t_token *lst)
 Reconhece operadores de redirections/pipes e avança o índice.
 IMPORTANTE: só deve ser chamado quando line[i] é |, < ou > fora de aspas.
 */
-static t_tktype read_operator(const char *s, size_t *i)
+static t_tktype	read_operator(const char *s, size_t *i)
 {
 	if (s[*i] == '|')
 	{
@@ -131,7 +131,7 @@ static t_tktype read_operator(const char *s, size_t *i)
 		(*i)++;
 		return (R_IN);
 	}
-	//	Em teoria não chega aqui
+	// não deveria cair aqui
 	(*i)++;
 	return (WORD);
 }
@@ -164,6 +164,7 @@ Regras:
 static t_token	*read_word(const char *line, size_t *i)
 {
 	size_t	j;
+	size_t	end;
 	size_t	len;
 	int		in_single;
 	int		in_double;
@@ -175,35 +176,38 @@ static t_token	*read_word(const char *line, size_t *i)
 	in_single = 0;
 	in_double = 0;
 
-	/* PRIMEIRA PASSAGEM: contar quantos chars vão pro token (sem aspas) */
+	/* PRIMEIRA PASSAGEM: conta quantos chars vão pro token (sem aspas) */
 	while (line[j] != '\0')
 	{
+		// fora de aspas, espaço/operador encerra a palavra
 		if (!in_single && !in_double
 			&& (line[j] == ' ' || line[j] == '\t'
 				|| line[j] == '|' || line[j] == '<' || line[j] == '>'))
 			break;
+		// trata aspas simples
 		if (line[j] == '\'' && !in_double)
 		{
 			in_single = !in_single;
 			j++;
 			continue;
 		}
+		// trata aspas duplas
 		if (line[j] == '\"' && !in_single)
 		{
 			in_double = !in_double;
 			j++;
 			continue;
 		}
+		// caractere normal conta pro tamanho
 		len++;
 		j++;
 	}
+	// se alguma aspa ficou aberta, erro de sintaxe
 	if (in_single || in_double)
-	{
-		// aspas não fechadas -> erro de sintaxe
 		return (NULL);
-	}
+	end = j;
 
-	/* SEGUNDA PASSAGEM: copiar para o buffer, pulando aspas */
+	/* SEGUNDA PASSAGEM: copia pro buffer, pulando aspas */
 	buf = malloc(len + 1);
 	if (!buf)
 		return (NULL);
@@ -211,7 +215,7 @@ static t_token	*read_word(const char *line, size_t *i)
 	k = 0;
 	in_single = 0;
 	in_double = 0;
-	while (line[j] != '\0' && k < len)
+	while (j < end)
 	{
 		if (line[j] == '\'' && !in_double)
 		{
@@ -228,7 +232,7 @@ static t_token	*read_word(const char *line, size_t *i)
 		buf[k++] = line[j++];
 	}
 	buf[k] = '\0';
-	*i = j;
+	*i = end;
 	return (token_new_owned(WORD, buf));
 }
 

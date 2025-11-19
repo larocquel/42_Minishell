@@ -6,25 +6,40 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/18 21:27:35 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:40:48 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static const char	*token_type_str(t_tktype type)
+{
+	if (type == WORD)
+		return ("WORD");
+	if (type == PIPE)
+		return ("PIPE");
+	if (type == R_IN)
+		return ("REDIR_IN");
+	if (type == R_OUT)
+		return ("REDIR_OUT");
+	if (type == R_APP)
+		return ("REDIR_APP");
+	if (type == R_HDC)
+		return ("HEREDOC");
+	return ("UNKNOWN");
+}
+
 /*
-Pra ver se os tokens estão saindo certo,
-podemos temporariamente imprimir os tokens
+Debug: imprime a lista de tokens no terminal.
 */
 static void	debug_print_tokens(t_token *lst)
 {
 	while (lst)
 	{
-		printf("[type=%d]'%s'\n", lst->type, lst->value);
+		printf("[%-9s] (%s)\n", token_type_str(lst->type), lst->value);
 		lst = lst->next;
 	}
 }
-
 /*
 Função auxiliar para checar se a string é "exit"-
 Mais pra frente isso vira um builtin de verdade.
@@ -97,9 +112,6 @@ void	run_shell(t_shell *sh)
 		//	Debug: imprime tokens
 		debug_print_tokens(tokens);
 		free_tokens(tokens);
-
-		//	Por enquanto só mostramos o que o user digitou
-		printf("Digitou: %s\n", line);
 		free(line);
 	}
 }
