@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/19 18:04:37 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/21 14:07:22 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,28 +38,37 @@ typedef struct s_shell
 } t_shell;
 
 //	Espécie de MACROS para o lexer » WORD = 0, PIPE = 1, ...
-typedef enum e_tktype
+typedef enum e_type
 {
 	WORD,
 	PIPE,
-	R_IN,
-	R_OUT,
-	R_APP,
-	R_HDC
-}	t_tktype;
+	R_IN,   /* '<'   */
+	R_OUT,  /* '>'   */
+	R_APP,  /* '>>'  */
+	R_HDC   /* '<<'  */
+}	t_type;
 
 //	Estrutura de tokens
 typedef struct s_token
 {
-	t_tktype		type;
+	t_type			type;
 	char			*value;	// string com o conteúdo do token (ex: "ls", "arquivo.txt")
 	struct s_token	*next;
 } t_token;
+
+//	Estrutura de redireções
+typedef struct s_redir
+{
+	t_type			type;    //	Usar R_IN / R_OUT / R_APP / R_HDC
+	char			*target; //	Arquivo ou delimitador de heredoc
+	struct s_redir	*next;
+}	t_redir;
 
 //	Estrutura de comandos
 typedef struct s_cmd
 {
 	char			**argv;	//	Lista de argumentos (argv[0] = comando)
+	t_redir			*redirs;  /* lista de redireções */
 	struct s_cmd	*next;	//	Próximo comando no pipeline (NULL se for o último)
 } t_cmd;
 

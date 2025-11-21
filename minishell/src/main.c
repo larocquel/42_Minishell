@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/19 17:47:26 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/21 14:03:39 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	debug_print_cmds(t_cmd *cmds)
 Debug: Retorna a string do tipo identificado
 */
 
-static const char	*token_type_str(t_tktype type)
+static const char	*token_type_str(t_type type)
 {
 	if (type == WORD)
 		return ("WORD");

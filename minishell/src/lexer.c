@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/19 14:55:55 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/21 14:03:34 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Cria um novo token copiando a string [start, start+len).
 Usado para WORD simples e para operadores com strings fixas.
 */
-static t_token	*token_new(t_tktype type, const char *start, size_t len)
+static t_token	*token_new(t_type type, const char *start, size_t len)
 {
 	t_token	*tok;
 	size_t	i;
@@ -46,7 +46,7 @@ static t_token	*token_new(t_tktype type, const char *start, size_t len)
 Cria um token assumindo que value já está alocado
 (usado no caso das palavras com aspas, onde montamos o buffer antes).
 */
-static t_token	*token_new_owned(t_tktype type, char *value)
+static t_token	*token_new_owned(t_type type, char *value)
 {
 	t_token	*tok;
 
@@ -104,7 +104,7 @@ void	free_tokens(t_token *lst)
 Reconhece operadores de redirections/pipes e avança o índice.
 IMPORTANTE: só deve ser chamado quando line[i] é |, < ou > fora de aspas.
 */
-static t_tktype	read_operator(const char *s, size_t *i)
+static t_type	read_operator(const char *s, size_t *i)
 {
 	if (s[*i] == '|')
 	{
@@ -139,7 +139,7 @@ static t_tktype	read_operator(const char *s, size_t *i)
 /*
 Cria um token de operador com string fixa ("|", "<", ">", ">>", "<<").
 */
-static t_token	*token_new_op(t_tktype type)
+static t_token	*token_new_op(t_type type)
 {
 	if (type == PIPE)
 		return (token_new(type, "|", 1));
@@ -247,7 +247,7 @@ t_token	*tokenize_line(const char *line)
 	size_t		i;
 	t_token		*list;
 	t_token		*tok;
-	t_tktype	type;
+	t_type	type;
 
 	list = NULL;
 	i = 0;
