@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 16:13:30 by davmendo          #+#    #+#             */
-/*   Updated: 2025/11/18 23:36:47 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:53:50 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,30 @@ static int	ms_update_env(t_shell *sh, const char *k, size_t klen, char *nv)
 
 /*
  * adiciona uma variavel nova ao env
- * realocando o array para caber mais um elemento
+ * allocando o array para caber mais um elemento
 */
 
 static int	ms_add_new_env(t_shell *sh, char *nv, size_t i)
 {
 	char	**newtab;
-
-	newtab = (char **)realloc(sh->envp, sizeof(char *) * (i + 2));
+	size_t	j;
+	
+	newtab = (char **)malloc(sizeof(char *) * (i + 2));
 	if (!newtab)
 	{
 		free(nv);
 		return (-1);
 	}
+	j = 0;
+	while (j < i)
+	{
+		newtab[j] = sh->envp[j];
+		j++;
+	}
+	newtab[i] = nv;
+	newtab[i + 1] = NULL;
+	free(sh->envp);	
 	sh->envp = newtab;
-	sh->envp[i] = nv;
-	sh->envp[i + 1] = NULL;
 	return (0);
 }
 

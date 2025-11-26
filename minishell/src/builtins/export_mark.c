@@ -6,7 +6,7 @@
 /*   By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 16:31:21 by davmendo          #+#    #+#             */
-/*   Updated: 2025/11/18 23:39:27 by davmendo         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:49:16 by davmendo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	ms_export_mark_no_value(t_shell *sh, const char *key)
 	i = 0;
 	while (sh->envp != NULL && sh->envp[i] != NULL)
 		i++;
-	newtab = (char **)realloc(sh->envp, sizeof(char *) * (i + 2));
+	newtab = (char **)ft_realloc(sh->envp, i + 1, i + 2, sizeof(char *));
 	if (newtab == NULL)
 	{
 		free(nv);
@@ -94,3 +94,5 @@ int	ms_export_mark_no_value(t_shell *sh, const char *key)
 	sh->envp[i + 1] = NULL;
 	return (0);
 }
+
+

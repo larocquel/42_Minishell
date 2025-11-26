@@ -6,7 +6,7 @@
 #    By: davmendo <davmendo@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 17:39:32 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/18 19:28:08 by davmendo         ###   ########.fr        #
+#    Updated: 2025/11/26 21:52:07 by davmendo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ SRCS = \
 ./utils/ft_atoi.c \
 ./utils/ft_bzero.c \
 ./utils/ft_calloc.c \
+./utils/ft_realloc.c \
 ./utils/ft_isalnum.c \
 ./utils/ft_isalpha.c \
 ./utils/ft_isascii.c \
