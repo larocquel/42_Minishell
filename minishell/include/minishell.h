@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/21 14:07:22 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:27:38 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,10 @@ typedef struct s_redir
 //	Estrutura de comandos
 typedef struct s_cmd
 {
-	char			**argv;	//	Lista de argumentos (argv[0] = comando)
-	t_redir			*redirs;  /* lista de redireções */
-	struct s_cmd	*next;	//	Próximo comando no pipeline (NULL se for o último)
+	char			**argv;		//	Lista de argumentos (argv[0] = comando)
+	t_redir			*redirs;	//	Lista de redireções
+	struct s_cmd	*next;		//	Próximo comando no pipeline (NULL se for o último)
 } t_cmd;
-
-
 
 /* Functions */
 
@@ -90,5 +88,6 @@ void	free_tokens(t_token *lst);
 //	parser.c
 t_cmd	*parse_pipeline(t_token *tokens);
 void	free_cmds(t_cmd *cmd);
+void	free_redirs(t_redir *r);
 
 #endif

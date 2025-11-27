@@ -6,88 +6,72 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:59:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/19 17:49:22 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/26 22:39:20 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Conta quantos tokens WORD existem até próximo PIPE ou fim.
-Ex: "echo oi mundo | grep oi"
-	-> Para o primeiro comando: ("echo", "oi", "mundo") = 3 WORDs
+Adiciona redireção ao fim da lista
 */
-static size_t	count_words_until_pipe(t_token *tok)
+static int	redir_add_back(t_redir **lst, t_redir *new_r)
 {
-	size_t	count;
+	t_redir	*tmp;
 
-	count = 0;
-	while (tok && tok->type != PIPE)
+	if (!new_r)
+		return (0);
+	if (!*lst)
 	{
-		if (tok->type == WORD)
-			count++;
-		else
-		{
-			//	To do: Futura lógica de redirections aqui
-		}
-		tok = tok->next;
+		*lst = new_r;
+		return (1);
 	}
-	return (count);
+	tmp = *lst;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_r;
+	return (1);
 }
 
 /*
-Cria um t_cmd para o trecho atual até o PIPE:
-- Aloca argv com tamanho num_words + 1
-- Duplica os valores dos WORDs
-- argv termina em NULL
+Cria um node de redir (duplica target)
 */
-static t_cmd	*create_cmd_from_tokens(t_token **cur)
+static t_redir	*redir_new(t_type type, const char *target)
 {
-	t_cmd	*cmd;
-	size_t	word_count;
-	size_t	i;
-	t_token	*tok;
+	t_redir	*r;
 
-	word_count = count_words_until_pipe(*cur);
-	if (word_count == 0)
+	r = malloc(sizeof(t_redir));
+	if (!r)
 		return (NULL);
-	cmd = malloc(sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->argv = malloc(sizeof(char *) * (word_count + 1));
-	if (!cmd->argv)
+	r->type = type;
+	r->target = ft_strdup(target);
+	if (!r->target)
 	{
-		free(cmd);
+		free(r);
 		return (NULL);
 	}
-	i = 0;
-	tok = *cur;
-	while (tok && tok->type != PIPE)
-	{
-		if (tok->type == WORD)
-		{
-			cmd->argv[i] = ft_strdup(tok->value);
-			if (!cmd->argv[i])
-			{
-				while (i > 0)
-					free(cmd->argv[--i]); // --i ou i--? pq --i nao liberta o primeiro i a entrar
-				free(cmd->argv);
-				free(cmd);
-				return (NULL);
-			}
-			i++;
-		}
-		//	To do: No futuro, vamos tratar redireções antes do PIPE, aqui
-		tok = tok->next;
-	}
-	cmd->argv[i] = NULL;
-	cmd->next = NULL;
-	*cur = tok;	//	Devolve o ponteiro parado no PIPE (ou NULL)
-	return (cmd);
+	r->next = NULL;
+	return (r);
 }
 
 /*
-Libera  toda lista de comandos.
+Libera redirs
+*/
+void	free_redirs(t_redir *r)
+{
+	t_redir	*next;
+
+	while (r)
+	{
+		next = r->next;
+		free(r->target);
+		free(r);
+		r = next;
+	}
+}
+
+/*
+Libera cmds (argv e redirs)
 */
 void	free_cmds(t_cmd *cmd)
 {
@@ -101,24 +85,159 @@ void	free_cmds(t_cmd *cmd)
 		{
 			i = 0;
 			while (cmd->argv[i])
-			{
-				free(cmd->argv[i]);
-				i++;
-			}
+				free(cmd->argv[i++]);
 			free(cmd->argv);
 		}
+		if (cmd->redirs)
+			free_redirs(cmd->redirs);
 		free(cmd);
 		cmd = next;
 	}
 }
 
 /*
-Valida sintaxe simples do uso de PIPE
-- Não pode começar com PIPE
+- Conta quantos WORD aparecem até o próximo PIPE (ignorando redirs e seus alvos).
+- Retorna o número de WORD; não altera a lista de tokens.
+*/
+static size_t	count_words_until_pipe(t_token *tok)
+{
+	size_t	count;
+
+	count = 0;
+	while (tok && tok->type != PIPE)
+	{
+		if (tok->type == WORD)
+			count++;
+		else if (tok->type == R_IN || tok->type == R_OUT
+			|| tok->type == R_APP || tok->type == R_HDC)
+		{
+			// pula o token da redireção e também o próximo, que deve ser WORD.
+			// - se não for WORD, será tratado no create)
+			if (tok->next)
+				tok = tok->next;
+			else
+				break;
+		}
+		tok = tok->next;
+	}
+	return (count);
+}
+
+/*
+Cria um comando consumindo tokens a partir de *cur até PIPE (ou fim).
+- Preenche argv com os WORDs encontrados
+- Constrói lista de redirs a partir dos tokens R_*
+- Atualiza *cur para o token STOP (PIPE ou NULL)
+
+Em caso de erro de sintaxe (redir sem target) ou falha de alocação, retorna NULL.
+OBS: caller deve liberar recursos (free_cmds) em caso de NULL.
+*/
+static t_cmd	*create_cmd_from_tokens(t_token **cur)
+{
+	t_cmd	*cmd;
+	size_t	word_count;
+	size_t	i;
+	t_token	*tok;
+	t_token	*start;
+	t_redir	*r;
+
+	if (!cur || !*cur)
+		return (NULL);
+	start = *cur;
+	word_count = count_words_until_pipe(start);
+	// Se não houver palavras nesse trecho -> erro de sintaxe (ex: " |" ou ">> |")
+	// Porém permitiremos comandos que só contenham redireções (ex: > out) ?
+	// O subject normalmente exige pelo menos um argv por comando; manteremos a regra: precisa de pelo menos 1 WORD.
+	if (word_count == 0)
+		return (NULL);
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->redirs = NULL;
+	cmd->next = NULL;
+	cmd->argv = malloc(sizeof(char *) * (word_count + 1));
+	if (!cmd->argv)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	i = 0;
+	tok = start;
+	while (tok && tok->type != PIPE)
+	{
+		if (tok->type == WORD)
+		{
+			cmd->argv[i] = ft_strdup(tok->value);
+			if (!cmd->argv[i])
+			{
+				// Cleanup parcial
+				while (i > 0)
+					free(cmd->argv[--i]);
+				free(cmd->argv);
+				free(cmd);
+				return (NULL);
+			}
+			i++;
+			tok = tok->next;
+		}
+		else if (tok->type == R_IN || tok->type == R_OUT
+			|| tok->type == R_APP || tok->type == R_HDC)
+		{
+			// devemos ter um token alvo a seguir (WORD)
+			if (!tok->next || tok->next->type != WORD)
+			{
+				//	Erro de sintaxe: Redirection sem target
+				//	Libera argv parcial
+				while (i > 0)
+					free(cmd->argv[--i]);
+				free(cmd->argv);
+				free(cmd);
+				return (NULL);
+			}
+			//	Cria redir e anexa
+			{
+				r = redir_new(tok->type, tok->next->value);
+				if (!r)
+				{
+					while (i > 0)
+						free(cmd->argv[--i]);
+					free(cmd->argv);
+					free(cmd);
+					return (NULL);
+				}
+				if (!redir_add_back(&cmd->redirs, r))
+				{
+					free_redirs(r);
+					while (i > 0)
+						free(cmd->argv[--i]);
+					free(cmd->argv);
+					free(cmd);
+					return (NULL);
+				}
+			}
+			// Consumir token da redir e o token alvo (WORD)
+			tok = tok->next->next;
+		}
+		else	// token inesperado (teoricamente não ocorrerá)
+		{
+			tok = tok->next;
+		}
+	}
+	//	Finaliza argv
+	cmd->argv[i] = NULL;
+	//	Atualiza *cur para o ponto onde paramos(pode ser PIPE ou NULL)
+	*cur = tok;
+	return (cmd);
+}
+
+/*
+Valida sintaxe simples do uso de PIPE e redireções
+- Não pode começar por PIPE
 - Não pode ter dois PIPEs seguidos
 - Não pode terminar com PIPE
+- Redir não pode ficar sem target (isso será detectado em create_cmd)
 */
-static int	validate_pipes_syntax(t_token *tok)
+static int	validate_syntax(t_token *tok)
 {
 	t_token	*prev;
 
@@ -127,8 +246,16 @@ static int	validate_pipes_syntax(t_token *tok)
 		return (0);
 	while (tok)
 	{
+		// Detectar PIPE duplicado
 		if (tok->type == PIPE && (!prev || prev->type == PIPE))
 			return (0);
+		// Detectar redir no fim (sem alvo)
+		if ((tok->type == R_IN || tok->type == R_OUT
+				|| tok->type == R_APP || tok->type == R_HDC)
+			&& (!tok->next || tok->next->type != WORD))
+		{
+			return (0);
+		}
 		prev = tok;
 		tok = tok->next;
 	}
@@ -138,9 +265,8 @@ static int	validate_pipes_syntax(t_token *tok)
 }
 
 /*
-Constrói a lista de t?cmd a partir da lista de tokensÇ
-- Tokens separados por PIPE viram comandos separados
-- Por enquanto só tratamos WORD e PIPE
+Transforma lista de tokens em lista de comandos (t_cmd),
+com argv e redirs preenchidos.
 */
 t_cmd	*parse_pipeline(t_token *tokens)
 {
@@ -149,7 +275,9 @@ t_cmd	*parse_pipeline(t_token *tokens)
 	t_cmd	*new_cmd;
 	t_token	*cur;
 
-	if (!validate_pipes_syntax(tokens))
+	if (!tokens)
+		return (NULL);
+	if (!validate_syntax(tokens))
 		return (NULL);
 	first = NULL;
 	last = NULL;

@@ -6,11 +6,11 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/21 14:30:54 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/26 17:33:08 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#									NOME										#
+#									NAME										#
 
 NAME		= minishell
 
