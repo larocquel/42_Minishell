@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/26 21:27:38 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/11/29 18:42:34 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,6 @@
 //	Var global para sinais, o extern avisa que essa var global será utilizada em algum .c, mas não cria outra cópia dela.
 extern volatile sig_atomic_t	g_signal;
 
-// Estrutura principal do shell (vamos expandir depois)
-typedef struct s_shell
-{
-	int	last_status;				// Armazena o ultimo exit-status (para o $? no futuro)
-} t_shell;
-
 //	Espécie de MACROS para o lexer » WORD = 0, PIPE = 1, ...
 typedef enum e_type
 {
@@ -54,7 +48,7 @@ typedef struct s_token
 	t_type			type;
 	char			*value;	// string com o conteúdo do token (ex: "ls", "arquivo.txt")
 	struct s_token	*next;
-} t_token;
+}	t_token;
 
 //	Estrutura de redireções
 typedef struct s_redir
@@ -70,7 +64,23 @@ typedef struct s_cmd
 	char			**argv;		//	Lista de argumentos (argv[0] = comando)
 	t_redir			*redirs;	//	Lista de redireções
 	struct s_cmd	*next;		//	Próximo comando no pipeline (NULL se for o último)
-} t_cmd;
+}	t_cmd;
+
+//	Estrutra para variáveis de ambiente
+//	Ex: "HOME=/home/leo" -> key="HOME", value="/home/leo"
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
+// Estrutura principal do shell
+typedef struct s_shell
+{
+	t_env	*env_list;		// Lista encadeada das vars de ambiente
+	int		last_status;	// Armazena o ultimo exit-status (para o $? no futuro)
+} t_shell;
 
 /* Functions */
 
@@ -89,5 +99,9 @@ void	free_tokens(t_token *lst);
 t_cmd	*parse_pipeline(t_token *tokens);
 void	free_cmds(t_cmd *cmd);
 void	free_redirs(t_redir *r);
+
+//	env.c
+void	init_env(t_shell *sh, char **envp);
+char	*get_env_value(t_env *env, char *key);
 
 #endif

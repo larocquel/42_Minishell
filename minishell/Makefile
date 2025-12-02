@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/26 17:33:08 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/11/29 18:43:18 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,8 @@ INCLUDES	= -Iinclude -I$(LIBFT_DIR)
 SRC			= $(SRC_DIR)/main.c		\
 			  $(SRC_DIR)/signals.c	\
 			  $(SRC_DIR)/lexer.c	\
-			  $(SRC_DIR)/parser.c
+			  $(SRC_DIR)/parser.c	\
+			  $(SRC_DIR)/env.c
 
 
 #					CONVERSION: src/arquivo.c → obj/arquivo.o					#

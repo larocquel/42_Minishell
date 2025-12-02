@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 17:39:32 by leoaguia          #+#    #+#              #
-#    Updated: 2025/11/02 15:37:20 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/12/01 14:21:52 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,6 +57,7 @@ SRCS = \
 ./utils/ft_putstr_fd.c \
 ./utils/ft_split.c \
 ./utils/ft_strchr.c \
+./utils/ft_strcmp.c	\
 ./utils/ft_strdup.c \
 ./utils/ft_striteri.c \
 ./utils/ft_strjoin.c \

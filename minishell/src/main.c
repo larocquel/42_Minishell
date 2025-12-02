@@ -6,15 +6,23 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/26 23:51:40 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/01 14:58:20 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-Imprime lista de redirs de um comando
-*/
+// Adicione uma função temporária para testar se deu certo (Debug)
+void debug_print_env(t_env *env)
+{
+	while (env)
+	{
+		printf("KEY: %s | VAL: %s\n", env->key, env->value);
+		env = env->next;
+	}
+}
+
+// Imprime lista de redirs de um comando
 static void debug_print_redirs(t_redir *r)
 {
 	const char *type_str;
@@ -40,9 +48,7 @@ static void debug_print_redirs(t_redir *r)
 	}
 }
 
-/*
-Imprime argv e redirs de cada comando
-*/
+// Imprime argv e redirs de cada comando
 static void	debug_print_cmds(t_cmd *cmds)
 {
 	size_t i;
@@ -73,10 +79,8 @@ static void	debug_print_cmds(t_cmd *cmds)
 }
 
 
-/*
-Debug: Retorna a string do tipo identificado
-*/
 
+// Debug: Retorna a string do tipo identificado
 static const char	*token_type_str(t_type type)
 {
 	if (type == WORD)
@@ -94,9 +98,8 @@ static const char	*token_type_str(t_type type)
 	return ("UNKNOWN");
 }
 
-/*
-Debug: imprime a lista de tokens no terminal.
-*/
+
+// Debug: imprime a lista de tokens no terminal.
 static void	debug_print_tokens(t_token *lst)
 {
 	while (lst)
@@ -109,7 +112,6 @@ static void	debug_print_tokens(t_token *lst)
 Função auxiliar para checar se a string é "exit"-
 Mais pra frente isso vira um builtin de verdade.
 */
-
 static int	is_exit_cmd(char *line)
 {
 	if (!line)
@@ -208,8 +210,17 @@ int	main(int argc, char **argv, char **envp) //	O que é envp?
 
 	(void)argc;
 	(void)argv;
-	(void)envp;
+
 	sh.last_status = 0;
+	// 1. Inicializa o ambiente
+	init_env(&sh, envp);
+
+	// DEBUG: Descomente para ver se funcionou, depois apague
+	//debug_print_env(sh.env_list);
+
 	run_shell(&sh);
+
+	// TODO: Precisaremos de uma função free_env(&sh) no futuro para limpar a memória ao sair
+
 	return (sh.last_status);
 }
