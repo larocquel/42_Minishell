@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/07 20:02:23 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:48:22 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,8 @@ int     ft_exit(t_shell *sh);
 char    *find_executable(char *cmd, t_env *env_list);
 char    **env_to_array(t_env *env_list);
 void    free_array(char **arr);
+
+//	expand.c
+void	expand_all_tokens(t_shell *sh, t_token *tokens);
 
 #endif

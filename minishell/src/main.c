@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/07 20:11:08 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:57:46 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,34 +78,34 @@
 // 	}
 // }
 
-// // Debug: Retorna a string do tipo identificado
-// static const char	*token_type_str(t_type type)
-// {
-// 	if (type == WORD)
-// 		return ("WORD");
-// 	if (type == PIPE)
-// 		return ("PIPE");
-// 	if (type == R_IN)
-// 		return ("R_IN");
-// 	if (type == R_OUT)
-// 		return ("R_OUT");
-// 	if (type == R_APP)
-// 		return ("R_APP");
-// 	if (type == R_HDC)
-// 		return ("R_HDC");
-// 	return ("UNKNOWN");
-// }
+// Debug: Retorna a string do tipo identificado
+static const char	*token_type_str(t_type type)
+{
+	if (type == WORD)
+		return ("WORD");
+	if (type == PIPE)
+		return ("PIPE");
+	if (type == R_IN)
+		return ("R_IN");
+	if (type == R_OUT)
+		return ("R_OUT");
+	if (type == R_APP)
+		return ("R_APP");
+	if (type == R_HDC)
+		return ("R_HDC");
+	return ("UNKNOWN");
+}
 
 
-// // Debug: imprime a lista de tokens no terminal.
-// static void	debug_print_tokens(t_token *lst)
-// {
-// 	while (lst)
-// 	{
-// 		printf("[%-9s] (%s)\n", token_type_str(lst->type), lst->value);
-// 		lst = lst->next;
-// 	}
-// }
+// Debug: imprime a lista de tokens no terminal.
+static void	debug_print_tokens(t_token *lst)
+{
+	while (lst)
+	{
+		printf("[%-9s] (%s)\n", token_type_str(lst->type), lst->value);
+		lst = lst->next;
+	}
+}
 
 // Função para comando externos
 void	execute_external(t_shell *sh, t_cmd *cmd)
@@ -209,7 +209,14 @@ void	run_shell(t_shell *sh)
 			continue;
 		}
 
-        // 2. Parser
+		// 2. EXPANDER (Novo!)
+		// Transforma "$HOME" em "/home/leo" e limpa aspas
+		expand_all_tokens(sh, tokens);
+
+		// Debug (Opcional): Verifique como ficaram os tokens
+		debug_print_tokens(tokens);
+
+        // 3. Parser
 		cmds = parse_pipeline(tokens);
 		if (!cmds)
 		{

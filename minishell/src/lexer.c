@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/21 14:03:34 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/08 19:25:55 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ static t_token	*token_new(t_type type, const char *start, size_t len)
 }
 
 /*
+TODO: Correto ou necessário adaptar para o novo read_word?
 Cria um token assumindo que value já está alocado
 (usado no caso das palavras com aspas, onde montamos o buffer antes).
 */
@@ -155,85 +156,48 @@ static t_token	*token_new_op(t_type type)
 }
 
 /*
-Lê um WORD a partir de line[*i], respeitando aspas simples e duplas.
-Regras:
-- Espaço/tab e | < > só quebram a palavra se estivermos FORA de aspas.
-- Aspas não entram no valor final do token.
-- Se terminar com aspas não fechadas, retornamos NULL (erro de sintaxe).
+Lê um WORD mantendo as aspas.
+A responsabilidade de interpretar/remover as aspas será do Expander.
 */
 static t_token	*read_word(const char *line, size_t *i)
 {
-	size_t	j;
-	size_t	end;
+	size_t	start;
 	size_t	len;
 	int		in_single;
 	int		in_double;
-	char	*buf;
-	size_t	k;
+	char	*value;
 
-	j = *i;
-	len = 0;
+	start = *i;
 	in_single = 0;
 	in_double = 0;
-
-	/* PRIMEIRA PASSAGEM: conta quantos chars vão pro token (sem aspas) */
-	while (line[j] != '\0')
+	//	Percorre a string para achar o fim da palavra
+	while (line[*i])
 	{
-		// fora de aspas, espaço/operador encerra a palavra
-		if (!in_single && !in_double
-			&& (line[j] == ' ' || line[j] == '\t'
-				|| line[j] == '|' || line[j] == '<' || line[j] == '>'))
+		// Se trocarmos de estado de aspas, apenas atualizamos a flag
+		// Mas, continuamos avançando o índice (não damos continue)
+		if (line[*i] == '\'' && !in_double)
+			in_single = !in_single;
+		else if (line[*i] == '\"' && !in_single)
+			in_double = !in_double;
+		// Se achou separador  E não está entre aspas, acabou a palavra
+		else if (!in_single && !in_double &&
+				(line[*i] == ' ' || line[*i] == '\t' ||
+				line[*i] == '|' || line[*i] == '<' || line[*i] == '>'))
 			break;
-		// trata aspas simples
-		if (line[j] == '\'' && !in_double)
-		{
-			in_single = !in_single;
-			j++;
-			continue;
-		}
-		// trata aspas duplas
-		if (line[j] == '\"' && !in_single)
-		{
-			in_double = !in_double;
-			j++;
-			continue;
-		}
-		// caractere normal conta pro tamanho
-		len++;
-		j++;
+		(*i)++;
 	}
-	// se alguma aspa ficou aberta, erro de sintaxe
-	if (in_single || in_double)
-		return (NULL);
-	end = j;
 
-	/* SEGUNDA PASSAGEM: copia pro buffer, pulando aspas */
-	buf = malloc(len + 1);
-	if (!buf)
-		return (NULL);
-	j = *i;
-	k = 0;
-	in_single = 0;
-	in_double = 0;
-	while (j < end)
+	// Se sair do loop com aspas abertas -> Erro de sintaxe
+	if (in_single || in_double)
 	{
-		if (line[j] == '\'' && !in_double)
-		{
-			in_single = !in_single;
-			j++;
-			continue;
-		}
-		if (line[j] == '\"' && !in_single)
-		{
-			in_double = !in_double;
-			j++;
-			continue;
-		}
-		buf[k++] = line[j++];
+		printf("minishell: Syntax error: Unclosed quotes\n");
+		return (NULL);
 	}
-	buf[k] = '\0';
-	*i = end;
-	return (token_new_owned(WORD, buf));
+
+	// Copia exatamente o que estava lá (incluindo as aspas)
+	len = *i - start;
+	value = ft_substr(line, start, len);
+	return (token_new_owned(WORD, value));
 }
 
 /*
