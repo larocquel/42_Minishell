@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/03 17:38:44 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:08:35 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	ft_pwd(void)
 	}
 	else
 	{
-		perror("minishell: pwd");	// Imprime erro se falhar (ex: permissão)
+		perror("pwd");	// Imprime erro se falhar (ex: permissão)
 		return (1);
 	}
 }

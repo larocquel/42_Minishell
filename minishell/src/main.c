@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/08 19:57:46 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:08:56 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,34 +78,34 @@
 // 	}
 // }
 
-// Debug: Retorna a string do tipo identificado
-static const char	*token_type_str(t_type type)
-{
-	if (type == WORD)
-		return ("WORD");
-	if (type == PIPE)
-		return ("PIPE");
-	if (type == R_IN)
-		return ("R_IN");
-	if (type == R_OUT)
-		return ("R_OUT");
-	if (type == R_APP)
-		return ("R_APP");
-	if (type == R_HDC)
-		return ("R_HDC");
-	return ("UNKNOWN");
-}
+// // Debug: Retorna a string do tipo identificado
+// static const char	*token_type_str(t_type type)
+// {
+// 	if (type == WORD)
+// 		return ("WORD");
+// 	if (type == PIPE)
+// 		return ("PIPE");
+// 	if (type == R_IN)
+// 		return ("R_IN");
+// 	if (type == R_OUT)
+// 		return ("R_OUT");
+// 	if (type == R_APP)
+// 		return ("R_APP");
+// 	if (type == R_HDC)
+// 		return ("R_HDC");
+// 	return ("UNKNOWN");
+// }
 
 
-// Debug: imprime a lista de tokens no terminal.
-static void	debug_print_tokens(t_token *lst)
-{
-	while (lst)
-	{
-		printf("[%-9s] (%s)\n", token_type_str(lst->type), lst->value);
-		lst = lst->next;
-	}
-}
+// // Debug: imprime a lista de tokens no terminal.
+// static void	debug_print_tokens(t_token *lst)
+// {
+// 	while (lst)
+// 	{
+// 		printf("[%-9s] (%s)\n", token_type_str(lst->type), lst->value);
+// 		lst = lst->next;
+// 	}
+// }
 
 // Função para comando externos
 void	execute_external(t_shell *sh, t_cmd *cmd)
@@ -119,7 +119,7 @@ void	execute_external(t_shell *sh, t_cmd *cmd)
 	path = find_executable(cmd->argv[0], sh->env_list);
 	if (!path)
 	{
-		printf("minishell: %s: command not found\n", cmd->argv[0]);
+		printf("%s: command not found\n", cmd->argv[0]);
 		sh->last_status = NFOUND; // NFOUND = 127 é o código padrão para "command not found"
 		return ;
 	}
@@ -136,7 +136,7 @@ void	execute_external(t_shell *sh, t_cmd *cmd)
 		execve(path, cmd->argv, env_array);
 
 		// Se chegou aqui, execve falhou (ex: permissão negada, formato errado)
-		perror("minishell: execve failed");
+		perror("execve failed");
 		free(path);
 		free_array(env_array);
 		// Importante: Filho deve sair, senão ele continua rodando o shell!
@@ -214,7 +214,7 @@ void	run_shell(t_shell *sh)
 		expand_all_tokens(sh, tokens);
 
 		// Debug (Opcional): Verifique como ficaram os tokens
-		debug_print_tokens(tokens);
+		//debug_print_tokens(tokens);
 
         // 3. Parser
 		cmds = parse_pipeline(tokens);

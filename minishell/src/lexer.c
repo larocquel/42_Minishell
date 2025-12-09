@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/08 19:25:55 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:08:41 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ static t_token	*read_word(const char *line, size_t *i)
 	// Se sair do loop com aspas abertas -> Erro de sintaxe
 	if (in_single || in_double)
 	{
-		printf("minishell: Syntax error: Unclosed quotes\n");
+		printf("Syntax error: Unclosed quotes\n");
 		return (NULL);
 	}
 
