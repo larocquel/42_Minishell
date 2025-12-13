@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/09 17:08:56 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:56:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,19 +159,33 @@ void	execute_external(t_shell *sh, t_cmd *cmd)
 
 }
 
-// Roteador do comandos
+/*
+Roteador de comandos:
+Verifica se é um Builtin. Se sim, executa no processo pai.
+Se não, manda para execute_external (que faz o fork).
+*/
 void	execute_command(t_shell *sh, t_cmd *cmd)
 {
 	if (!cmd || !cmd->argv || !cmd->argv[0])
 		return ;
 
-	// Comparação simples para rotear os builtins
+	// Builtins Informativos
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		sh->last_status = ft_env(sh);
 	else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		sh->last_status = ft_pwd();
 	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		sh->last_status = ft_exit(sh);
+
+	// Builtins de Manipulação (NOVOS)
+	else if (ft_strcmp(cmd->argv[0], "export") == 0)
+		sh->last_status = ft_export(sh, cmd);
+	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
+		sh->last_status = ft_unset(sh, cmd);
+	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
+		sh->last_status = ft_cd(sh, cmd);
+
+	// Comandos Externos (ls, grep, cat...)
 	else
 		execute_external(sh, cmd);
 }

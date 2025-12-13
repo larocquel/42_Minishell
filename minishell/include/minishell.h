@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/08 19:48:22 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/13 12:58:23 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,14 +102,26 @@ t_cmd	*parse_pipeline(t_token *tokens);
 void	free_cmds(t_cmd *cmd);
 void	free_redirs(t_redir *r);
 
-//	env.c
+//	env.c (Lógica de alto nível)
 void	init_env(t_shell *sh, char **envp);
 char	*get_env_value(t_env *env, char *key);
+void	env_update(t_shell *sh, char *key, char *value);
+
+//	env_utils.c (Manipulação da lista)
+t_env	*env_new(char *key, char *value);
+void	env_add_back(t_env **lst, t_env *new_node);
+t_env	*env_get_node(t_env *env, char *key);
+void	env_remove_node(t_shell *sh, char *key);
 
 //	builtins.c
 int     ft_env(t_shell *sh);
 int     ft_pwd(void);
 int     ft_exit(t_shell *sh);
+
+//	builtins_ops.c
+int	ft_export(t_shell *sh, t_cmd *cmd);
+int	ft_unset(t_shell *sh, t_cmd *cmd);
+int	ft_cd(t_shell *sh, t_cmd *cmd);
 
 //	exec_utils.c
 char    *find_executable(char *cmd, t_env *env_list);
