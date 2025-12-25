@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/13 12:56:31 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/25 22:16:01 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,13 @@ void	execute_external(t_shell *sh, t_cmd *cmd)
 	// Processo FILHO
 	if (pid == 0)
 	{
+		// Configura as redireções antes de executar
+		if (setup_redirects(cmd) != 0)
+		{
+			free(path);
+			// Se der erro no arquivo, sai com status 1
+			exit(1);
+		}
 		// Converter env list para array
 		env_array = env_to_array(sh->env_list);
 

@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/13 12:58:23 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/25 22:11:51 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <signal.h>				//	sig_atomic_t, signals
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>					//	open, O_RDONLY, ...
 # include "sys/wait.h"
 
 /* Macros */
@@ -130,5 +131,8 @@ void    free_array(char **arr);
 
 //	expand.c
 void	expand_all_tokens(t_shell *sh, t_token *tokens);
+
+// redirect.c
+int		setup_redirects(t_cmd *cmd);
 
 #endif
