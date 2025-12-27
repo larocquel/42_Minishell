@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/12/25 22:17:48 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/12/27 17:30:06 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,9 @@ SRC			= $(SRC_DIR)/main.c			\
 			  $(SRC_DIR)/builtins_ops.c	\
 			  $(SRC_DIR)/exec_utils.c	\
 			  $(SRC_DIR)/expand.c		\
-			  $(SRC_DIR)/redirect.c
+			  $(SRC_DIR)/redirect.c		\
+			  $(SRC_DIR)/heredoc.c		\
+			  $(SRC_DIR)/executor.c
 
 
 #					CONVERSION: src/arquivo.c → obj/arquivo.o					#

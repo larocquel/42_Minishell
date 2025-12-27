@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/25 22:11:51 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/27 21:21:39 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,12 +117,13 @@ void	env_remove_node(t_shell *sh, char *key);
 //	builtins.c
 int     ft_env(t_shell *sh);
 int     ft_pwd(void);
-int     ft_exit(t_shell *sh);
+int		ft_exit(t_shell *sh, t_cmd *cmd);
+int		ft_echo(t_cmd *cmd);
 
 //	builtins_ops.c
-int	ft_export(t_shell *sh, t_cmd *cmd);
-int	ft_unset(t_shell *sh, t_cmd *cmd);
-int	ft_cd(t_shell *sh, t_cmd *cmd);
+int		ft_export(t_shell *sh, t_cmd *cmd);
+int		ft_unset(t_shell *sh, t_cmd *cmd);
+int		ft_cd(t_shell *sh, t_cmd *cmd);
 
 //	exec_utils.c
 char    *find_executable(char *cmd, t_env *env_list);
@@ -134,5 +135,12 @@ void	expand_all_tokens(t_shell *sh, t_token *tokens);
 
 // redirect.c
 int		setup_redirects(t_cmd *cmd);
+
+// heredoc.c
+int		process_heredoc(char *delimiter);
+char	*get_heredoc_file(void);
+
+// executor.c
+void	execute_pipeline(t_shell *sh, t_cmd *cmds);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/25 22:16:01 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/27 21:34:47 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,94 +107,49 @@
 // 	}
 // }
 
-// Função para comando externos
-void	execute_external(t_shell *sh, t_cmd *cmd)
-{
-	pid_t	pid;
-	char	*path;
-	char	**env_array;
-	int		status;
-
-	// 1. Achar o caminho
-	path = find_executable(cmd->argv[0], sh->env_list);
-	if (!path)
-	{
-		printf("%s: command not found\n", cmd->argv[0]);
-		sh->last_status = NFOUND; // NFOUND = 127 é o código padrão para "command not found"
-		return ;
-	}
-
-	// 2. Fork
-	pid = fork();
-	// Processo FILHO
-	if (pid == 0)
-	{
-		// Configura as redireções antes de executar
-		if (setup_redirects(cmd) != 0)
-		{
-			free(path);
-			// Se der erro no arquivo, sai com status 1
-			exit(1);
-		}
-		// Converter env list para array
-		env_array = env_to_array(sh->env_list);
-
-		// Executar (Se der certo, o programa "substitui" o filho e não retorna)
-		execve(path, cmd->argv, env_array);
-
-		// Se chegou aqui, execve falhou (ex: permissão negada, formato errado)
-		perror("execve failed");
-		free(path);
-		free_array(env_array);
-		// Importante: Filho deve sair, senão ele continua rodando o shell!
-		exit(1);
-	}
-	// Processo PAI
-	else if (pid > 0)
-	{
-		// Espera o filho terminar
-		waitpid(pid, &status, 0);
-
-		// Extrai o exit status (macro WEXITSTATUS)
-		if (WIFEXITED(status))
-			sh->last_status = WEXITSTATUS(status);
-
-		free(path);
-	}
-	else
-		perror("fork failed");
-
-}
-
 /*
 Roteador de comandos:
-Verifica se é um Builtin. Se sim, executa no processo pai.
-Se não, manda para execute_external (que faz o fork).
+Decide se o comando deve rodar no processo PAI (Builtins de estado)
+ou se deve ir para o executor geral (Pipes e Externos).
 */
-void	execute_command(t_shell *sh, t_cmd *cmd)
+void	execute_command(t_shell *sh, t_cmd *cmds)
 {
-	if (!cmd || !cmd->argv || !cmd->argv[0])
+	// Se não houver comando, não faz nada
+	if (!cmds || !cmds->argv || !cmds->argv[0])
 		return ;
 
-	// Builtins Informativos
-	if (ft_strcmp(cmd->argv[0], "env") == 0)
-		sh->last_status = ft_env(sh);
-	else if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		sh->last_status = ft_pwd();
-	else if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		sh->last_status = ft_exit(sh);
-
-	// Builtins de Manipulação (NOVOS)
-	else if (ft_strcmp(cmd->argv[0], "export") == 0)
-		sh->last_status = ft_export(sh, cmd);
-	else if (ft_strcmp(cmd->argv[0], "unset") == 0)
-		sh->last_status = ft_unset(sh, cmd);
-	else if (ft_strcmp(cmd->argv[0], "cd") == 0)
-		sh->last_status = ft_cd(sh, cmd);
-
-	// Comandos Externos (ls, grep, cat...)
-	else
-		execute_external(sh, cmd);
+	// Caso especial: APENAS UM comando e é Builtin de estado.
+	// Estes comandos alteram o shell atual (variáveis, diretório, saída),
+	// por isso PRECISAM rodar no Pai, sem fork.
+	// Se houver pipe (cmds->next), eles rodam no filho (via execute_pipeline)
+	// para não matar o shell pai.
+	if (!cmds->next)
+	{
+		if (ft_strcmp(cmds->argv[0], "cd") == 0)
+		{
+			sh->last_status = ft_cd(sh, cmds);
+			return ;
+		}
+		if (ft_strcmp(cmds->argv[0], "export") == 0)
+		{
+			sh->last_status = ft_export(sh, cmds);
+			return ;
+		}
+		if (ft_strcmp(cmds->argv[0], "unset") == 0)
+		{
+			sh->last_status = ft_unset(sh, cmds);
+			return ;
+		}
+		if (ft_strcmp(cmds->argv[0], "exit") == 0)
+		{
+			// Passamos 'cmds' para verificar argumentos (ex: exit 42)
+			sh->last_status = ft_exit(sh, cmds);
+			return ;
+		}
+	}
+	// Se não for um caso especial do pai, mandamos para o executor genérico.
+	// O execute_pipeline cuida de criar forks, pipes e rodar builtins de display (echo, pwd...).
+	execute_pipeline(sh, cmds);
 }
 
 /*
@@ -246,8 +201,7 @@ void	run_shell(t_shell *sh)
 			continue;
 		}
 
-		// 3. EXECUÇÃO (Nosso Executor Temporário)
-        // Por enquanto, só executa o primeiro comando, ignorando pipes
+		// 4. EXECUÇÃO
 		execute_command(sh, cmds);
 
 		// Limpeza da rodada
@@ -261,7 +215,7 @@ void	run_shell(t_shell *sh)
 main:
 - Inicializa a struct do shell
 - Chama run_shell
-- Retorna o último status (por enquanto sempre 0)
+- Retorna o último status
 */
 int	main(int argc, char **argv, char **envp) //	O que é envp?
 {
