@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/27 21:21:39 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 01:09:16 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>					//	open, O_RDONLY, ...
+# include <errno.h>
 # include "sys/wait.h"
-
-/* Macros */
-# define CTRL_C 130
-# define NFOUND 127
 
 /* Structures */
 
@@ -88,10 +85,12 @@ typedef struct s_shell
 /* Functions */
 
 //	main.c
-void	run_shell(t_shell *sh);		//	Função principal do loop do shell
+void	ru130shell(t_shell *sh);		//	Função principal do loop do shell
 
 //	signals.c
 void	setup_signals_interactive(void);
+void	setup_signals_child(void);
+void	setup_signals_ignore(void);
 
 //	lexer.c
 //	(primeira versão, sem aspas)

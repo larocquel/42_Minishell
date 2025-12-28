@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:57:37 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/13 12:54:51 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 01:27:03 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ int	ft_export(t_shell *sh, t_cmd *cmd)
 	{
 		if (!is_valid_key(cmd->argv[i]))
 		{
-			printf("export: `%s': not a valid identifier\n", cmd->argv[i]);
-			sh->last_status = 1;	// Erro não fatal
+			ft_putstr_fd("minishell: export: `", 2);
+			ft_putstr_fd(cmd->argv[i], 2);
+			ft_putendl_fd("': not a valid identifier", 2);
+			sh->last_status = 1;
 		}
 		else
 		{
@@ -122,7 +124,7 @@ int	ft_cd(t_shell *sh, t_cmd *cmd)
 		path = get_env_value(sh->env_list, "HOME");
 		if (!path)
 		{
-			printf("cd: HOME not set\n");
+			ft_putendl_fd("minishell: cd: HOME not set", 2);
 			return (1);
 		}
 	}
@@ -132,7 +134,10 @@ int	ft_cd(t_shell *sh, t_cmd *cmd)
 	// Tenta mudar o diretório
 	if (chdir(path) != 0)
 	{
-		perror("cd");
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(cmd->argv[1], 2);
+		ft_putstr_fd(": ", 2);
+		perror(""); // Imprime o erro do sistema (No such file...)
 		return (1);
 	}
 

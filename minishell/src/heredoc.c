@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 12:26:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/26 12:55:01 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 00:54:20 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	process_heredoc(char *delimiter)
 	while (1)
 	{
 		// TODO: Se houve Ctrl-C globalmente, para tudo (implementaremos check melhor depois)
-		if (g_signal == CTRL_C)
+		if (g_signal == 130)
 			break;
 		line = readline("> ");
 		if (!line)	// Ctrl-D (EOF) sem delimitador

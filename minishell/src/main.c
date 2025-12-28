@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/27 21:34:47 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/27 22:49:18 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,7 @@ int	main(int argc, char **argv, char **envp) //	O que é envp?
 	(void)argc;
 	(void)argv;
 
+	g_signal = 0;
 	sh.last_status = 0;
 	// 1. Inicializa o ambiente
 	init_env(&sh, envp);

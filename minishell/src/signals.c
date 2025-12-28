@@ -6,53 +6,67 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:37:35 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/18 23:05:42 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 01:07:39 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// DEFINIÇÃO única da variável global
-volatile sig_atomic_t	g_signal = 0;
+/*
+Definição da global com o tipo seguro para sinais.
+volatile: Obriga leitura da RAM (não cacheia em registrador).
+sig_atomic_t: Garante que a escrita não seja interrompida pela metade.
+*/
+volatile sig_atomic_t	g_signal;
 
 /*
 Handler para SIGINT (Ctrl-C) no modo interativo.
-Ideia:
-- Imprime uma quebra de linha
-- Limpa a linha atual do readline
-- Mostra um novo prompt
+1. Imprime nova linha.
+2. Avisa ao readline que estamos em uma nova linha.
+3. Limpa o buffer atual.
+4. Redesenha o prompt.
 */
-static void	sigint_handler(int sig)
+static void	handle_sigint(int sig)
 {
 	(void)sig;
-	g_signal = CTRL_C;				// CTRL_C = 130 = exit status padrão de CTRL-C
-	write(1, "^C\n", 3);
-	rl_replace_line("", 0);			// Limpa o que foi digitado
+	g_signal = 130;					// 130 = exit status padrão de CTRL-C
+	write(1, "\n", 1);
 	rl_on_new_line();				// Vamos para uma nova linha
+	rl_replace_line("", 0);			// Limpa o que foi digitado
 	rl_redisplay();					// Redesenha o prompt (minishell$ )
 }
 
 /*
-No modo interativo, queremos IGNORAR completamente o CTRL-\
-Então vamos usar SIG_IGN em vez de um handler vazio.
+Configura sinais para o Prompt (Pai Interativo).
 */
 void	setup_signals_interactive(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
+	struct sigaction	sa;
 
-	sa_int.sa_handler = sigint_handler;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;            // sem SA_RESTART, readline já lida bem com isso
+	// Ignora SIGQUIT (Ctrl-\)
+	signal(SIGQUIT, SIG_IGN);
 
-	sa_quit.sa_handler = SIG_IGN;   // ignora CTRL-'\'
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
+	// Configura SIGINT (Ctrl-C)
+	ft_memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = &handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+}
 
-	sigaction(SIGINT, &sa_int, NULL);
-	sigaction(SIGQUIT, &sa_quit, NULL);
+/*
+Restaura comportamento padrão para Processos Filhos.
+*/
+void	setup_signals_child(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	// Evita o readline instalar handlers próprios
-	rl_catch_signals = 0;
+/*
+Ignora sinais no Pai enquanto espera Filhos (Blocking).
+*/
+void	setup_signals_ignore(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }
 

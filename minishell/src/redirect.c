@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 21:50:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/26 12:48:52 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 01:17:25 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	open_file(t_redir *redir)
 	else if (redir->type == R_APP)
 		fd = open(redir->target, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		perror("");
+		perror("minishell");
 	return (fd);
 }
 
