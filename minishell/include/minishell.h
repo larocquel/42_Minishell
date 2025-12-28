@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/28 01:09:16 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 15:10:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,14 +78,14 @@ typedef struct s_env
 // Estrutura principal do shell
 typedef struct s_shell
 {
-	t_env	*env_list;		// Lista encadeada das vars de ambiente
-	int		last_status;	// Armazena o ultimo exit-status (para o $? no futuro)
+	t_env	*env_list;
+	int		last_status;
 } t_shell;
 
 /* Functions */
 
 //	main.c
-void	ru130shell(t_shell *sh);		//	Função principal do loop do shell
+void	run_shell(t_shell *sh);
 
 //	signals.c
 void	setup_signals_interactive(void);
@@ -93,7 +93,6 @@ void	setup_signals_child(void);
 void	setup_signals_ignore(void);
 
 //	lexer.c
-//	(primeira versão, sem aspas)
 t_token	*tokenize_line(const char *line);
 void	free_tokens(t_token *lst);
 
@@ -113,21 +112,28 @@ void	env_add_back(t_env **lst, t_env *new_node);
 t_env	*env_get_node(t_env *env, char *key);
 void	env_remove_node(t_shell *sh, char *key);
 
-//	builtins.c
-int     ft_env(t_shell *sh);
-int     ft_pwd(void);
-int		ft_exit(t_shell *sh, t_cmd *cmd);
+/* builtins.c */
 int		ft_echo(t_cmd *cmd);
+int		ft_pwd(void);
+int		ft_env(t_shell *sh);
+int		ft_exit(t_shell *sh, t_cmd *cmd);
 
-//	builtins_ops.c
+/* builtins_ops.c */
+int		ft_cd(t_shell *sh, t_cmd *cmd);
 int		ft_export(t_shell *sh, t_cmd *cmd);
 int		ft_unset(t_shell *sh, t_cmd *cmd);
-int		ft_cd(t_shell *sh, t_cmd *cmd);
+
+// builtins_utils.c
+int		is_numeric(char *str);
+int		check_n_flag(char *arg);
+void	update_wd_env(t_shell *sh, char *old);
+void	print_export_error(char *arg);
+int		is_valid_key(char *str);
 
 //	exec_utils.c
-char    *find_executable(char *cmd, t_env *env_list);
-char    **env_to_array(t_env *env_list);
-void    free_array(char **arr);
+char	*find_executable(char *cmd, t_env *env_list);
+char	**env_to_array(t_env *env_list);
+void	free_array(char **arr);
 
 //	expand.c
 void	expand_all_tokens(t_shell *sh, t_token *tokens);

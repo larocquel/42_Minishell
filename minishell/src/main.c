@@ -162,6 +162,7 @@ void	run_shell(t_shell *sh)
 	t_cmd	*cmds;
 
 	setup_signals_interactive();
+	//TODO function to change SHLVL
 	while (1)
 	{
 		line = readline("minishell$ ");

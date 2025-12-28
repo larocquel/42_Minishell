@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/12/27 17:30:06 by leoaguia         ###   ########.fr        #
+#    Updated: 2025/12/28 14:31:14 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,18 +41,19 @@ INCLUDES	= -Iinclude -I$(LIBFT_DIR)
 
 #								ALL .c FILES									#
 
-SRC			= $(SRC_DIR)/main.c			\
-			  $(SRC_DIR)/signals.c		\
-			  $(SRC_DIR)/lexer.c		\
-			  $(SRC_DIR)/parser.c		\
-			  $(SRC_DIR)/env.c			\
-			  $(SRC_DIR)/env_utils.c	\
-			  $(SRC_DIR)/builtins.c		\
-			  $(SRC_DIR)/builtins_ops.c	\
-			  $(SRC_DIR)/exec_utils.c	\
-			  $(SRC_DIR)/expand.c		\
-			  $(SRC_DIR)/redirect.c		\
-			  $(SRC_DIR)/heredoc.c		\
+SRC			= $(SRC_DIR)/main.c				\
+			  $(SRC_DIR)/signals.c			\
+			  $(SRC_DIR)/lexer.c			\
+			  $(SRC_DIR)/parser.c			\
+			  $(SRC_DIR)/env.c				\
+			  $(SRC_DIR)/env_utils.c		\
+			  $(SRC_DIR)/builtins.c			\
+			  $(SRC_DIR)/builtins_ops.c		\
+			  $(SRC_DIR)/builtins_utils.c	\
+			  $(SRC_DIR)/exec_utils.c		\
+			  $(SRC_DIR)/expand.c			\
+			  $(SRC_DIR)/redirect.c			\
+			  $(SRC_DIR)/heredoc.c			\
 			  $(SRC_DIR)/executor.c
 
 

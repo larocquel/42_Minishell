@@ -6,76 +6,83 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:57:37 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/28 01:27:03 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/28 15:57:55 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Verifica validade do nome da variável (apenas alfanumérico e _) */
-static int	is_valid_key(char *str)
+/*
+Builtin: cd
+*/
+int	ft_cd(t_shell *sh, t_cmd *cmd)
 {
-	int	i;
+	char	old_pwd[4096];
+	char	*path;
 
-	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
-		return (0);
-	i = 1;
-	while (str[i] && str[i] != '=')	// Paramos no '=' se houver
+	// 1. Salva onde estamos agora (será o OLDPWD)
+	if (!getcwd(old_pwd, 4096))
+		old_pwd[0] = '\0';	// Marca como vazio se falhar
+
+	// 2. Define destino
+	if (!cmd->argv[1])
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
+		path = get_env_value(sh->env_list, "HOME");
+		if (!path)
+		{
+			ft_putendl_fd("minihsell: cd: HOME not set ", 2);
+			return (1);
+		}
 	}
-	return (1);
+	else
+		path = cmd->argv[1];
+
+	// 3. Executa a mudança
+	if (chdir(path) != 0)
+	{
+		ft_putstr_fd("minishell: cd: ", 2);
+		ft_putstr_fd(path, 2);
+		ft_putstr_fd(": ", 2);
+		perror("");	// Imprime erro do sistema
+		return (1);
+	}
+	update_wd_env(sh, old_pwd);
+	return (0);
 }
 
 /*
 Builtin: export
-Sintaxe: export VAR=valor OU export VAR
 */
 int	ft_export(t_shell *sh, t_cmd *cmd)
 {
 	int		i;
-	char	*equal_sign;
-	char	*key;
-	char	*val;
+	char	*eq_pos;
 
 	i = 1;
-	// Se rodar apenas "export", bash lista vars. Para o mandatório, podemos ignorar ou usar ft_env.
 	if (!cmd->argv[1])
-		return (ft_env(sh));
+		return (ft_env(sh));	// export sem args lista vars (simplificação)
 	while (cmd->argv[i])
 	{
 		if (!is_valid_key(cmd->argv[i]))
 		{
-			ft_putstr_fd("minishell: export: `", 2);
-			ft_putstr_fd(cmd->argv[i], 2);
-			ft_putendl_fd("': not a valid identifier", 2);
+			print_export_error(cmd->argv[i]);
 			sh->last_status = 1;
 		}
 		else
 		{
-			// Procura o '='
-			equal_sign = ft_strchr(cmd->argv[i], '=');
-			if (equal_sign)
+			eq_pos = ft_strchr(cmd->argv[i], '=');
+			if (eq_pos)
 			{
-				// Caso VAR=valor
-				*equal_sign = '\0';	// Divide temporariamente na posição do =
-				key = cmd->argv[i];
-				val = equal_sign + 1;
-				env_update(sh, key, val);
-				*equal_sign = '=';	// Restaura
-
+				*eq_pos = '\0';	// Corta string temporariamente
+				env_update(sh, cmd->argv[i], eq_pos + 1);
+				*eq_pos = '='; // Restaura
 			}
-			else
-			{
-				// Caso VAR (sem valor)
+			else	// Caso: export VAR (sem valor)
 				env_update(sh, cmd->argv[i], NULL);
-			}
 		}
 		i++;
 	}
-	return (0);
+	return (sh->last_status);	// Retorna erro se algum falhou
 }
 
 /*
@@ -89,59 +96,8 @@ int	ft_unset(t_shell *sh, t_cmd *cmd)
 	i = 1;
 	while (cmd->argv[i])
 	{
-		// Não precisa checar validade estrita no unset, mas é bom hábito.
-		// Bash ignora silenciosamente se não existir.
 		env_remove_node(sh, cmd->argv[i]);
 		i++;
 	}
-	return (0);
-}
-
-/* Auxiliar do CD para atualizar OLDPWD e PWD */
-static void	update_pwds(t_shell *sh)
-{
-	char	cwd[1024];
-	char	*old;
-
-	// Pega o valor atual de PWD para virar OLDPWD
-	old = get_env_value(sh->env_list, "PWD");
-	if (old)
-		env_update(sh, "OLDPWD", old);
-
-	// Pega o diretório atual do sistema e atualiza PWD
-	if (getcwd(cwd, sizeof(cwd)))
-		env_update(sh, "PWD", cwd);
-}
-
-/* Builtin: cd */
-int	ft_cd(t_shell *sh, t_cmd *cmd)
-{
-	char *path;
-
-	// Se não tiver argumentos, vai para HOME
-	if (!cmd->argv[1])
-	{
-		path = get_env_value(sh->env_list, "HOME");
-		if (!path)
-		{
-			ft_putendl_fd("minishell: cd: HOME not set", 2);
-			return (1);
-		}
-	}
-	else
-		path = cmd->argv[1];
-
-	// Tenta mudar o diretório
-	if (chdir(path) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", 2);
-		ft_putstr_fd(cmd->argv[1], 2);
-		ft_putstr_fd(": ", 2);
-		perror(""); // Imprime o erro do sistema (No such file...)
-		return (1);
-	}
-
-	// Se deu certo, atualiza variáveis
-	update_pwds(sh);
 	return (0);
 }
