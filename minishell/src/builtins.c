@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/28 14:30:35 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/01 19:36:05 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 /*
 Builtin: exit
-1. exit: sai com status do último comando.
-2. exit N: sai com status N.
-3. exit abc: erro "numeric argument required", sai com 2.
-4. exit 1 2: erro "too many arguments", NÃO SAI, status 1.
+Sai do shell, limpando toda a memória alocada.
+Trata argumentos numéricos e erros de sintaxe.
 */
-int	ft_exit(t_shell *sh, t_cmd *cmd)
+int ft_exit(t_shell *sh, t_cmd *cmd)
 {
-	ft_putendl_fd("exit", 2);	// Bash imprime "exit" no stderr em interativo
+	int status;
+
+	ft_putendl_fd("exit", 2);
 	if (cmd->argv[1])
 	{
 		if (!is_numeric(cmd->argv[1]))
@@ -29,17 +29,32 @@ int	ft_exit(t_shell *sh, t_cmd *cmd)
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(cmd->argv[1], 2);
 			ft_putendl_fd(": numeric argument required", 2);
+			// Limpeza completa antes de sair com erro
+            free_env_list(sh->env_list);
+			if (sh->cmds)
+				free_cmds(sh->cmds);     // Limpa comandos atuais
+			if (sh->tokens)
+				free_tokens(sh->tokens); // Limpa tokens atuais
+			rl_clear_history();
 			exit(2);
 		}
 		if (cmd->argv[2])
 		{
 			ft_putendl_fd("minishell: exit: too many arguments", 2);
-			return (1);	// Nota: Bash não sai neste caso!
+			return (1);
 		}
-		sh->last_status = ft_atoi(cmd->argv[1]);
+		status = ft_atoi(cmd->argv[1]);
 	}
-	// TODO: free_shell(sh);
-	exit(sh->last_status);
+	else
+		status = sh->last_status;
+	// Limpeza completa antes de sair normalmente
+	free_env_list(sh->env_list);
+	if (sh->cmds)
+		free_cmds(sh->cmds);		// Limpa comandos atuais
+	if (sh->tokens)
+		free_tokens(sh->tokens);	// Limpa tokens atuais
+	rl_clear_history();
+	exit(status);
 	return (0);
 }
 

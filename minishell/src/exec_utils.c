@@ -6,30 +6,11 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 21:12:31 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/07 20:15:47 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/01 20:27:17 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-/*
-Libera um array de strings (char **)
-Útil para limpar o resultado de ft_split ou o env array
-*/
-void	free_array(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-}
 
 /*
 Converte nossa lista t_env de volta para char **
@@ -79,30 +60,35 @@ char	*find_executable(char *cmd, t_env *env_list)
 	char	*full_path;
 	int		i;
 
-	// Se for caminho absoluto/relativo, checa direto
+	// 1. Caminho absoluto/relativo (ex: /bin/ls ou ./minishell)
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0) // DUVIDA: O que é access?
+		// access verifica se arquivo existe (F_OK) e é executável (X_OK)
+		if (access(cmd, F_OK | X_OK) == 0)
 			return (ft_strdup(cmd));
 		return (NULL);
 	}
-	// Busca o PATH no environment e divide
-	// Nota: Se get_env_value retornar NULL, ft_split pode quebrar se não proteger.
-	// Vamos assumir que get_env_value retorna NULL se não achar.
+
+	// 2. Busca no PATH
 	if (!get_env_value(env_list, "PATH"))
 		return (NULL);
 	paths = ft_split(get_env_value(env_list, "PATH"), ':');
 	if (!paths)
 		return (NULL);
-	i = -1;
-	while (paths[i++])
+
+	// 3. Itera sobre as pastas
+	i = 0;
+	while (paths[i])
 	{
-		// Monta: "/usr/bin" + "/" + "ls" em uma tacada só
 		full_path = ft_strjoin3(paths[i], "/", cmd);
 		if (access(full_path, F_OK | X_OK) == 0)
-			return (free_array(paths), full_path);
+		{
+			free_array(paths);
+			return (full_path);
+		}
 		free(full_path);
+		i++;
 	}
-	free_array(paths);
+	free_array(paths); // 4. Limpeza se não achar nada (IMPORTANTE PARA LEAKS)
 	return (NULL);
 }

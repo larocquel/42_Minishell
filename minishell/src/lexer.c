@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/09 17:08:41 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/01 18:26:40 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static t_token	*token_new_owned(t_type type, char *value)
 	return (tok);
 }
 
-//TO-DO: ACHO QUE PODERIAMOS UTILIZAR AS FUNCOES LST DO LIBFT
 /*
 Adiciona um token ao final da lista
 */
@@ -84,23 +83,6 @@ static int	token_add_back(t_token **lst, t_token *new_tok)
 	tmp->next = new_tok;
 	return (1);
 }
-
-/*
-Libera a lista de tokens inteira
-*/
-void	free_tokens(t_token *lst)
-{
-	t_token	*next;
-
-	while (lst)
-	{
-		next = lst->next;
-		free(lst->value);
-		free(lst);
-		lst = next;
-	}
-}
-
 /*
 Reconhece operadores de redirections/pipes e avança o índice.
 IMPORTANTE: só deve ser chamado quando line[i] é |, < ou > fora de aspas.

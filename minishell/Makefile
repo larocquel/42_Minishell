@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2025/12/28 14:31:14 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/01 20:42:17 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,8 @@ SRC			= $(SRC_DIR)/main.c				\
 			  $(SRC_DIR)/expand.c			\
 			  $(SRC_DIR)/redirect.c			\
 			  $(SRC_DIR)/heredoc.c			\
-			  $(SRC_DIR)/executor.c
+			  $(SRC_DIR)/executor.c			\
+			  $(SRC_DIR)/cleanup.c
 
 
 #					CONVERSION: src/arquivo.c → obj/arquivo.o					#
@@ -66,10 +67,24 @@ OBJ			= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 all: $(LIBFT) $(NAME)
 
+#						Supression of readline leaks rule						#
+sup:
+	echo "{\n\
+   leak readline\n\
+   Memcheck:Leak\n\
+   ...\n\
+   fun:readline\n\
+}\n\
+{\n\
+   leak add_history\n\
+   Memcheck:Leak\n\
+   ...\n\
+   fun:add_history\n\
+}" > readline.supp
+
 
 #								BUILD LIBFT										#
-
-$(LIBFT):
+$(LIBFT): sup
 	$(MAKE) -C $(LIBFT_DIR)
 
 
@@ -105,9 +120,9 @@ clean:
 #								- DELETE ANYTHING RELATED TO LIBFT				#
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f $(NAME) readline.supp
 	$(MAKE) -C $(LIBFT_DIR) fclean
-
+	
 
 #								FULL REBUILD									#
 re: fclean all

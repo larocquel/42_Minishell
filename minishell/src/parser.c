@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:59:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/11/26 22:39:20 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/01 18:50:09 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,47 +52,6 @@ static t_redir	*redir_new(t_type type, const char *target)
 	}
 	r->next = NULL;
 	return (r);
-}
-
-/*
-Libera redirs
-*/
-void	free_redirs(t_redir *r)
-{
-	t_redir	*next;
-
-	while (r)
-	{
-		next = r->next;
-		free(r->target);
-		free(r);
-		r = next;
-	}
-}
-
-/*
-Libera cmds (argv e redirs)
-*/
-void	free_cmds(t_cmd *cmd)
-{
-	t_cmd	*next;
-	size_t	i;
-
-	while (cmd)
-	{
-		next = cmd->next;
-		if (cmd->argv)
-		{
-			i = 0;
-			while (cmd->argv[i])
-				free(cmd->argv[i++]);
-			free(cmd->argv);
-		}
-		if (cmd->redirs)
-			free_redirs(cmd->redirs);
-		free(cmd);
-		cmd = next;
-	}
 }
 
 /*
