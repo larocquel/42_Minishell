@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/27 22:49:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/30 14:55:37 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,6 @@ void	run_shell(t_shell *sh)
 	t_cmd	*cmds;
 
 	setup_signals_interactive();
-	//TODO function to change SHLVL
 	while (1)
 	{
 		line = readline("minishell$ ");
@@ -215,6 +214,7 @@ void	run_shell(t_shell *sh)
 /*
 main:
 - Inicializa a struct do shell
+- Incrementa SHLVL
 - Chama run_shell
 - Retorna o último status
 */
@@ -227,9 +227,15 @@ int	main(int argc, char **argv, char **envp) //	O que é envp?
 
 	g_signal = 0;
 	sh.last_status = 0;
-	// 1. Inicializa o ambiente
+	// 1. Carrega o ambiente
 	init_env(&sh, envp);
+
+	// 2. Incrementa o SHLVL (NOVO) 🟢
+	increment_shell_level(&sh);
+
+	// 3. Entra no loop
 	run_shell(&sh);
+
 	// TODO: Precisaremos de uma função free_env(&sh) no futuro para limpar a memória ao sair
 
 	return (sh.last_status);

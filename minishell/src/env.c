@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 18:43:30 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/09 21:56:24 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/30 15:28:46 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,43 @@ void	env_update(t_shell *sh, char *key, char *value)
 			dup_val = NULL;
 		env_add_back(&sh->env_list, env_new(ft_strdup(key), dup_val));
 	}
+}
+
+/*
+Atualiza o SHLVL seguindo as regras do Bash:
+- Se negativo (< 0): vira 0.
+- Se null ou não numérico: vira 1.
+- Se > 1000: Imprime warning e reseta para 1.
+- Caso contrário: Incrementa +1.
+*/
+void	increment_shell_level(t_shell *sh)
+{
+	char	*val;
+	int		lvl;
+	char	*new_val;
+
+	val = get_env_value(sh->env_list, "SHLVL");
+	if (!val)
+		lvl = 1;
+	else
+		lvl = ft_atoi(val) + 1;
+
+	// Regra do Limite (1000)
+	if (lvl >= 1000)
+	{
+		ft_putstr_fd("minishell: warning: shell level (", 2);
+		ft_putnbr_fd(lvl, 2); // Imprime o número que estourou
+		ft_putendl_fd(") too high, resetting to 1", 2);
+		lvl = 1;
+	}
+	// Regra do Negativo
+	else if (lvl < 0)
+		lvl = 0;
+
+	// Atualiza no ambiente
+	new_val = ft_itoa(lvl);
+	if (!new_val)
+		return ;
+	env_update(sh, "SHLVL", new_val);
+	free(new_val);
 }

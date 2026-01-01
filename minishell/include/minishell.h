@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/28 15:10:31 by leoaguia         ###   ########.fr       */
+/*   Updated: 2025/12/30 14:50:07 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ void	free_redirs(t_redir *r);
 void	init_env(t_shell *sh, char **envp);
 char	*get_env_value(t_env *env, char *key);
 void	env_update(t_shell *sh, char *key, char *value);
+void	increment_shell_level(t_shell *sh);
 
 //	env_utils.c (Manipulação da lista)
 t_env	*env_new(char *key, char *value);
