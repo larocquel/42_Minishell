@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:06 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/09 16:56:54 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/02 16:15:32 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,36 +62,53 @@ static char	*append_str(char *base, char *val)
 - Retorna o novo índice i
 Ex: "ola $USER fim" -> acha USER, retorna valor "leoaguia", atualiza i.
 */
-static int	handle_dollar(char *str, int i, char **res, t_shell *sh)
+static int  handle_dollar(char *str, int i, char **res, t_shell *sh)
 {
-	int		start;
-	char	*var_name;
-	char	*var_value;
+    int     start;
+    char    *var_name;
+    char    *var_value;
 
-	i++;	// Pula o $
-	if (str[i] == '?')	// Caso especial $?
-	{
-		var_value = ft_itoa(sh->last_status);
-		*res = append_str(*res, var_value);
-		free(var_value);
-		return (i + 1);
-	}
+    i++;    // Pula o $
 
-	// Se for apenas $ sozinho ou seguido de espaço, não expande
-	if (!ft_isalnum(str[i]) && str[i] != '_')
-	{
-		*res = append_char(*res, '$');
-		return (i);
-	}
-	start = i;
-	while (ft_isalnum(str[i]) || str[i] == '_')
-		i++;
-	var_name = ft_substr(str, start, i - start);
-	var_value = get_env_value(sh->env_list, var_name);
-	if (var_value)
-		*res = append_str(*res, var_value);
-	free(var_name);
-	return (i);
+    // 1. Caso Especial: $?
+    if (str[i] == '?')
+    {
+        var_value = ft_itoa(sh->last_status);
+        *res = append_str(*res, var_value);
+        free(var_value);
+        return (i + 1);
+    }
+
+    // 2. Caso Especial: Números ($1, $123)
+    // Regra do Bash: variáveis numéricas ($1, $2...) pegam apenas UM dígito.
+    // Ex: $123 -> Variável "$1" (vazia) + Texto "23".
+    if (ft_isdigit(str[i]))
+    {
+        i++; // Consome o '1'
+        // Como não implementamos argumentos de script ($1..), expande para nada.
+        // Retornamos o índice apontando para o '2', que será tratado como texto.
+        return (i);
+    }
+
+    // 3. Caso Inválido: $ sozinho ou seguido de símbolo (ex: $@, $., $ )
+    // Variáveis normais DEVEM começar com letra ou _ (não número, pois já tratamos acima)
+    if (!ft_isalpha(str[i]) && str[i] != '_')
+    {
+        *res = append_char(*res, '$');
+        return (i);
+    }
+
+    // 4. Caso Padrão: Variáveis Normais ($VAR, $HOME)
+    start = i;
+    while (ft_isalnum(str[i]) || str[i] == '_')
+        i++;
+
+    var_name = ft_substr(str, start, i - start);
+    var_value = get_env_value(sh->env_list, var_name);
+    if (var_value)
+        *res = append_str(*res, var_value);
+    free(var_name);
+    return (i);
 }
 
 /*
