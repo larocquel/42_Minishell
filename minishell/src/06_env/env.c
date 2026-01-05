@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 18:43:30 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/30 15:28:46 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/05 23:35:23 by lla-rocq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Auxiliar estática: Recebe string crua "KEY=VAL", separa e adiciona na lista.
-Mantém-se estática pois só é usada pelo init_env.
+Auxiliar estática: Separa KEY=VAL e adiciona na lista.
 */
 static void	parse_and_add_env(t_shell *sh, char *env_str)
 {
@@ -51,7 +50,6 @@ void	init_env(t_shell *sh, char **envp)
 
 /*
 Retorna o VALOR de uma variável (string).
-Agora reutiliza env_get_node para evitar duplicação de lógica.
 */
 char	*get_env_value(t_env *env, char *key)
 {
@@ -64,9 +62,7 @@ char	*get_env_value(t_env *env, char *key)
 }
 
 /*
-Lógica do EXPORT:
-- Se a variável já existe: Atualiza o valor (se value não for NULL).
-- Se não existe: Cria um novo nó.
+Atualiza ou cria uma variavel.
 */
 void	env_update(t_shell *sh, char *key, char *value)
 {
@@ -76,8 +72,6 @@ void	env_update(t_shell *sh, char *key, char *value)
 	node = env_get_node(sh->env_list, key);
 	if (node)
 	{
-		// Se a variável existe e passamos um novo valor, atualiza.
-		// Ex: export VAR=novo (atualiza). export VAR (não muda o valor).
 		if (value)
 		{
 			if (node->value)
@@ -87,7 +81,6 @@ void	env_update(t_shell *sh, char *key, char *value)
 	}
 	else
 	{
-		// Verifica antes de duplicar
 		if (value)
 			dup_val = ft_strdup(value);
 		else
@@ -97,11 +90,7 @@ void	env_update(t_shell *sh, char *key, char *value)
 }
 
 /*
-Atualiza o SHLVL seguindo as regras do Bash:
-- Se negativo (< 0): vira 0.
-- Se null ou não numérico: vira 1.
-- Se > 1000: Imprime warning e reseta para 1.
-- Caso contrário: Incrementa +1.
+Atualiza o SHLVL seguindo as regras do Bash.
 */
 void	increment_shell_level(t_shell *sh)
 {
@@ -114,23 +103,17 @@ void	increment_shell_level(t_shell *sh)
 		lvl = 1;
 	else
 		lvl = ft_atoi(val) + 1;
-
-	// Regra do Limite (1000)
+	if (lvl < 0)
+		lvl = 0;
 	if (lvl >= 1000)
 	{
 		ft_putstr_fd("minishell: warning: shell level (", 2);
-		ft_putnbr_fd(lvl, 2); // Imprime o número que estourou
+		ft_putnbr_fd(lvl, 2);
 		ft_putendl_fd(") too high, resetting to 1", 2);
 		lvl = 1;
 	}
-	// Regra do Negativo
-	else if (lvl < 0)
-		lvl = 0;
-
-	// Atualiza no ambiente
 	new_val = ft_itoa(lvl);
-	if (!new_val)
-		return ;
-	env_update(sh, "SHLVL", new_val);
+	if (new_val)
+		env_update(sh, "SHLVL", new_val);
 	free(new_val);
 }

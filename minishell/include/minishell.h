@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 16:44:46 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/05 23:11:28 by lla-rocq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,43 +84,60 @@ typedef struct s_shell
 
 /* Functions */
 
+/* 01_main */
 /* main.c */
+void	execute_command(t_shell *sh, t_cmd *cmds);
 void	run_shell(t_shell *sh);
+/* cleanup.c */
+void	free_tokens(t_token *tokens);
+void	free_array(char **arr);
+void	free_redirs(t_redir *r);
+void    free_cmds(t_cmd *cmds);
+void    free_env_list(t_env *env);
 
-/* signals.c */
-void	setup_signals_interactive(void);
-void	setup_signals_child(void);
-void	setup_signals_ignore(void);
-
+/* 02_parsing */
 /* lexer.c */
 t_token	*tokenize_line(const char *line);
-
+/* lexer_utils.c */
+t_token	*token_new(t_type type, const char *start, size_t len);
+t_token	*token_new_owned(t_type type, char *value);
+t_token	*token_new_op(t_type type);
+int		token_add_back(t_token **lst, t_token *new_tok);
 /* parser.c */
 t_cmd	*parse_pipeline(t_token *tokens);
+/* parser_utils.c */
+int		redir_add_back(t_redir **lst, t_redir *new_r);
+t_redir	*redir_new(t_type type, const char *target);
+size_t	count_words_until_pipe(t_token *tok);
+int		validate_syntax(t_token *tok);
+/* expand.c */
+void	expand_token(t_token *tok, t_shell *sh);
+void	expand_all_tokens(t_shell *sh, t_token *tokens);
+/* expand_utils.c */
+char	*append_char(char *str, char c);
+char	*append_str(char *base, char *val);
+void	remove_quotes_final(char *str);
 
-/* env.c */
-void	init_env(t_shell *sh, char **envp);
-char	*get_env_value(t_env *env, char *key);
-void	env_update(t_shell *sh, char *key, char *value);
-void	increment_shell_level(t_shell *sh);
+/* 03_exec */
+/* exec.c */
+void	execute_pipeline(t_shell *sh, t_cmd *cmds);
+/* exec_simple.c */
+void	exit_child(t_shell *sh, int status);
+void	exec_simple_cmd(t_shell *sh, t_cmd *cmd);
+/* exec_utils.c */
+char	**env_to_array(t_env *env_list);
+char	*find_executable(char *cmd, t_env *env_list);
 
-/* env_utils.c */
-t_env	*env_new(char *key, char *value);
-void	env_add_back(t_env **lst, t_env *new_node);
-t_env	*env_get_node(t_env *env, char *key);
-void	env_remove_node(t_shell *sh, char *key);
-
+/* 04_builtins */
 /* builtins.c */
-int		ft_echo(t_cmd *cmd);
-int		ft_pwd(void);
+int 	ft_exit(t_shell *sh, t_cmd *cmd);
 int		ft_env(t_shell *sh);
-int		ft_exit(t_shell *sh, t_cmd *cmd);
-
+int		ft_pwd(void);
+int		ft_echo(t_cmd *cmd);
 /* builtins_ops.c */
 int		ft_cd(t_shell *sh, t_cmd *cmd);
 int		ft_export(t_shell *sh, t_cmd *cmd);
 int		ft_unset(t_shell *sh, t_cmd *cmd);
-
 /* builtins_utils.c */
 int		is_numeric(char *str);
 int		check_n_flag(char *arg);
@@ -128,28 +145,29 @@ void	update_wd_env(t_shell *sh, char *old);
 void	print_export_error(char *arg);
 int		is_valid_key(char *str);
 
-/* exec_utils.c */
-char	*find_executable(char *cmd, t_env *env_list);
-char	**env_to_array(t_env *env_list);
-
-/* expand.c */
-void	expand_all_tokens(t_shell *sh, t_token *tokens);
-
+/* 05_redirect */
 /* redirect.c */
 int		setup_redirects(t_cmd *cmd);
-
 /* heredoc.c */
 int		process_heredoc(char *delimiter);
 char	*get_heredoc_file(void);
 
-/* executor.c */
-void	execute_pipeline(t_shell *sh, t_cmd *cmds);
+/* 06_env */
+/* env.c */
+void	init_env(t_shell *sh, char **envp);
+char	*get_env_value(t_env *env, char *key);
+void	env_update(t_shell *sh, char *key, char *value);
+void	increment_shell_level(t_shell *sh);
+/* env_utils.c */
+t_env	*env_new(char *key, char *value);
+void	env_add_back(t_env **lst, t_env *new_node);
+t_env	*env_get_node(t_env *env, char *key);
+void	env_remove_node(t_shell *sh, char *key);
 
-/* cleanup.c */
-void	free_tokens(t_token *lst);
-void	free_array(char **arr);
-void	free_cmds(t_cmd *cmd);
-void	free_redirs(t_redir *r);
-void	free_env_list(t_env *env);
+/* 07_signals */
+/* signals.c */
+void	setup_signals_interactive(void);
+void	setup_signals_child(void);
+void	setup_signals_ignore(void);
 
 #endif

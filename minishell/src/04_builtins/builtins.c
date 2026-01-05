@@ -3,40 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/01 19:36:05 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/05 22:21:19 by lla-rocq         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
+Função auxiliar interna para limpar memória e sair.
+Poupa linhas no ft_exit.
+*/
+static void	builtin_exit_cleanup(t_shell *sh, int status)
+{
+	free_env_list(sh->env_list);
+	if (sh->cmds)
+		free_cmds(sh->cmds);
+	if (sh->tokens)
+		free_tokens(sh->tokens);
+	rl_clear_history();
+	exit(status);
+}
+
+/*
 Builtin: exit
 Sai do shell, limpando toda a memória alocada.
 Trata argumentos numéricos e erros de sintaxe.
 */
-int ft_exit(t_shell *sh, t_cmd *cmd)
+int	ft_exit(t_shell *sh, t_cmd *cmd)
 {
-	int status;
+	int	status;
 
 	ft_putendl_fd("exit", 2);
-	if (cmd->argv[1])
+	if (!cmd->argv[1])
+		status = sh->last_status;
+	else
 	{
 		if (!is_numeric(cmd->argv[1]))
 		{
 			ft_putstr_fd("minishell: exit: ", 2);
 			ft_putstr_fd(cmd->argv[1], 2);
 			ft_putendl_fd(": numeric argument required", 2);
-			// Limpeza completa antes de sair com erro
-            free_env_list(sh->env_list);
-			if (sh->cmds)
-				free_cmds(sh->cmds);     // Limpa comandos atuais
-			if (sh->tokens)
-				free_tokens(sh->tokens); // Limpa tokens atuais
-			rl_clear_history();
-			exit(2);
+			builtin_exit_cleanup(sh, 2);
 		}
 		if (cmd->argv[2])
 		{
@@ -45,16 +55,7 @@ int ft_exit(t_shell *sh, t_cmd *cmd)
 		}
 		status = ft_atoi(cmd->argv[1]);
 	}
-	else
-		status = sh->last_status;
-	// Limpeza completa antes de sair normalmente
-	free_env_list(sh->env_list);
-	if (sh->cmds)
-		free_cmds(sh->cmds);		// Limpa comandos atuais
-	if (sh->tokens)
-		free_tokens(sh->tokens);	// Limpa tokens atuais
-	rl_clear_history();
-	exit(status);
+	builtin_exit_cleanup(sh, status);
 	return (0);
 }
 
@@ -87,6 +88,7 @@ Imprime diretório atual.
 int	ft_pwd(void)
 {
 	char	cwd[4096];
+
 	if (getcwd(cwd, 4096))
 	{
 		ft_putendl_fd(cwd, 1);
@@ -97,7 +99,8 @@ int	ft_pwd(void)
 }
 
 /*
-Builtin: echo (Requer helper check_n_flag, que pode ficar aqui ou num utils)
+Builtin: echo
+Requer helper check_n_flag (builtins_utils.c)
 */
 int	ft_echo(t_cmd *cmd)
 {
@@ -106,8 +109,6 @@ int	ft_echo(t_cmd *cmd)
 
 	i = 1;
 	n_flag = 0;
-
-	// check_n_flag deve estar definido (pode ser static neste arquivo)
 	while (cmd->argv[i] && check_n_flag(cmd->argv[i]))
 	{
 		n_flag = 1;

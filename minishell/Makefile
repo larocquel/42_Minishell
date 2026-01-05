@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
+#    By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/05 17:27:36 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/05 23:01:07 by lla-rocq         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,22 +41,25 @@ INCLUDES	= -Iinclude -I$(LIBFT_DIR)
 
 #								ALL .c FILES									#
 
-SRC			= $(SRC_DIR)/main.c				\
-			  $(SRC_DIR)/signals.c			\
-			  $(SRC_DIR)/lexer.c			\
-			  $(SRC_DIR)/parser.c			\
-			  $(SRC_DIR)/env.c				\
-			  $(SRC_DIR)/env_utils.c		\
-			  $(SRC_DIR)/builtins.c			\
-			  $(SRC_DIR)/builtins_ops.c		\
-			  $(SRC_DIR)/builtins_utils.c	\
-			  $(SRC_DIR)/exec_utils.c		\
-			  $(SRC_DIR)/expand.c			\
-			  $(SRC_DIR)/redirect.c			\
-			  $(SRC_DIR)/heredoc.c			\
-			  $(SRC_DIR)/executor.c			\
-			  $(SRC_DIR)/cleanup.c
-
+SRC			= $(SRC_DIR)/01_main/main.c					\
+			  $(SRC_DIR)/01_main/cleanup.c				\
+			  $(SRC_DIR)/02_parsing/lexer.c				\
+			  $(SRC_DIR)/02_parsing/lexer_utils.c		\
+			  $(SRC_DIR)/02_parsing/parser.c			\
+			  $(SRC_DIR)/02_parsing/parser_utils.c		\
+			  $(SRC_DIR)/02_parsing/expand.c			\
+			  $(SRC_DIR)/02_parsing/expand_utils.c		\
+			  $(SRC_DIR)/03_exec/exec.c					\
+			  $(SRC_DIR)/03_exec/exec_simple.c			\
+			  $(SRC_DIR)/03_exec/exec_utils.c			\
+			  $(SRC_DIR)/04_builtins/builtins.c			\
+			  $(SRC_DIR)/04_builtins/builtins_ops.c		\
+			  $(SRC_DIR)/04_builtins/builtins_utils.c	\
+			  $(SRC_DIR)/05_redirect/redirect.c			\
+			  $(SRC_DIR)/05_redirect/heredoc.c			\
+			  $(SRC_DIR)/06_env/env.c					\
+			  $(SRC_DIR)/06_env/env_utils.c				\
+			  $(SRC_DIR)/07_signals/signals.c
 
 #					CONVERSION: src/arquivo.c → obj/arquivo.o					#
 
@@ -102,7 +105,7 @@ $(NAME): $(OBJ)
 #							- COMPILE THE .c AS .o								#
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 
