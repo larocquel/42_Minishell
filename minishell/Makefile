@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/01 20:42:17 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/05 17:27:36 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -122,7 +122,7 @@ clean:
 fclean: clean
 	rm -f $(NAME) readline.supp
 	$(MAKE) -C $(LIBFT_DIR) fclean
-	
+
 
 #								FULL REBUILD									#
 re: fclean all
