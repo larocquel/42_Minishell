@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 14:27:43 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:22:58 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,11 @@ void	run_shell(t_shell *sh)
 		sh->tokens = NULL;
 		sh->cmds = NULL;
 		line = readline("minishell$ ");
-
-		// CORREÇÃO: Verificar sinal aqui, logo após o readline retornar
 		if (g_signal != 0)
 		{
 			sh->last_status = g_signal;
 			g_signal = 0;
 		}
-
 		if (line == NULL)
 		{
 			printf("exit\n");

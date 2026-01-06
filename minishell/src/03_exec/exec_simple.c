@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 17:57:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 18:13:30 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:20:11 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,9 @@ static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 		exit_child(sh, ft_pwd());
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		exit_child(sh, ft_env(sh));
-	if (ft_strcmp(cmd->argv[0], "export") == 0 || \
-		ft_strcmp(cmd->argv[0], "unset") == 0 || \
-		ft_strcmp(cmd->argv[0], "cd") == 0)
+	if (ft_strcmp(cmd->argv[0], "export") == 0
+		|| ft_strcmp(cmd->argv[0], "unset") == 0
+		|| ft_strcmp(cmd->argv[0], "cd") == 0)
 		exit_child(sh, 0);
 	if (ft_strcmp(cmd->argv[0], "exit") == 0)
 		ft_exit(sh, cmd);

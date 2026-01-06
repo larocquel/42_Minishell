@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 23:11:28 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/06 15:44:19 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,8 @@ void	run_shell(t_shell *sh);
 void	free_tokens(t_token *tokens);
 void	free_array(char **arr);
 void	free_redirs(t_redir *r);
-void    free_cmds(t_cmd *cmds);
-void    free_env_list(t_env *env);
+void	free_cmds(t_cmd *cmds);
+void	free_env_list(t_env *env);
 
 /* 02_parsing */
 /* lexer.c */
@@ -130,7 +130,7 @@ char	*find_executable(char *cmd, t_env *env_list);
 
 /* 04_builtins */
 /* builtins.c */
-int 	ft_exit(t_shell *sh, t_cmd *cmd);
+int		ft_exit(t_shell *sh, t_cmd *cmd);
 int		ft_env(t_shell *sh);
 int		ft_pwd(void);
 int		ft_echo(t_cmd *cmd);
@@ -149,7 +149,7 @@ int		is_valid_key(char *str);
 /* redirect.c */
 int		setup_redirects(t_cmd *cmd);
 /* heredoc.c */
-int		process_heredoc(char *delimiter);
+int		process_heredocs(t_cmd *cmds);
 char	*get_heredoc_file(void);
 
 /* 06_env */

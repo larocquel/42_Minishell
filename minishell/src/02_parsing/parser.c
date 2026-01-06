@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:59:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 22:58:12 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:25:02 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,4 +135,3 @@ t_cmd	*parse_pipeline(t_token *tokens)
 	}
 	return (head);
 }
-

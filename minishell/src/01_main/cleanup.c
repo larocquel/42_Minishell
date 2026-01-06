@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:18:21 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 23:16:40 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:21:38 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,40 +69,41 @@ void	free_redirs(t_redir *r)
 
 /*
 Libera a lista de comandos (t_cmd).
-Percorre a lista e libera o array 'argv', a lista de redirecionamentos 'redirs' e o nó 't_cmd'.
+Percorre a lista e libera o array 'argv',
+a lista de redirecionamentos 'redirs' e o nó 't_cmd'.
 */
-void    free_cmds(t_cmd *cmds)
+void	free_cmds(t_cmd *cmds)
 {
-    t_cmd   *tmp;
+	t_cmd	*tmp;
 
-    while (cmds)
-    {
-        tmp = cmds->next;
-        if (cmds->argv)
-            free_array(cmds->argv);
-        if (cmds->redirs)
-            free_redirs(cmds->redirs);
-        free(cmds);
-        cmds = tmp;
-    }
+	while (cmds)
+	{
+		tmp = cmds->next;
+		if (cmds->argv)
+			free_array(cmds->argv);
+		if (cmds->redirs)
+			free_redirs(cmds->redirs);
+		free(cmds);
+		cmds = tmp;
+	}
 }
 
 /*
 Libera a lista de variáveis de ambiente (t_env).
 Percorre a lista e libera as strings 'key' e 'value', e o nó 't_env'.
 */
-void    free_env_list(t_env *env)
+void	free_env_list(t_env *env)
 {
-    t_env   *tmp;
+	t_env	*tmp;
 
-    while (env)
-    {
-        tmp = env->next;
-        if (env->key)
-            free(env->key);
-        if (env->value)
-            free(env->value);
-        free(env);
-        env = tmp;
-    }
+	while (env)
+	{
+		tmp = env->next;
+		if (env->key)
+			free(env->key);
+		if (env->value)
+			free(env->value);
+		free(env);
+		env = tmp;
+	}
 }

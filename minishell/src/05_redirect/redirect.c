@@ -6,60 +6,64 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 21:50:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2025/12/28 01:17:25 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:23:55 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Função auxiliar: Abre o arquivo com as flags corretas baseado no tipo
-Retorno: FD do arquivo aberto ou -1 em caso de erro
+Verifica se o ficheiro é um heredoc temporário gerado pelo minishell.
+Se for, apaga-o do disco (unlink) para não deixar lixo, mas mantém o FD aberto.
 */
-static int	open_file(t_redir *redir)
+static void	unlink_if_heredoc(t_redir *r)
 {
-	int		fd;
-	char	*file_to_open;
+	if (r->type == R_IN && !access(r->target, F_OK))
+	{
+		if (ft_strncmp(r->target, ".heredoc_", 9) == 0)
+			unlink(r->target);
+	}
+}
+
+/*
+Abre ficheiros de entrada/saída normais.
+Inclui a limpeza automática de ficheiros temporários (.heredoc_*).
+*/
+static int	open_file(t_redir *r)
+{
+	int	fd;
 
 	fd = -1;
-	file_to_open = redir->target;
-
-	// Se for Heredoc
-	// 1 - Roda o loop de leitura (process_heredoc)
-	// 2 - Troca o arquivo alvo pelo arquivo tmp gerado
-
-	if (redir->type == R_HDC)
-	{
-		process_heredoc(redir->target);
-		file_to_open = get_heredoc_file();
-		// Abre o tmp como leitura
-		fd = open(file_to_open, O_RDONLY);
-		// Dica: unlink agora faz o arquivo ser deletado assim que for fechado
-		unlink(file_to_open);
-	}
-	else if (redir->type == R_IN)
-		fd = open(redir->target, O_RDONLY);
-	else if (redir->type == R_OUT)
-		fd = open(redir->target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (redir->type == R_APP)
-		fd = open(redir->target, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (r->type == R_IN)
+		fd = open(r->target, O_RDONLY);
+	else if (r->type == R_OUT)
+		fd = open(r->target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	else if (r->type == R_APP)
+		fd = open(r->target, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		perror("minishell");
+	{
+		ft_putstr_fd("minishell: ", 2);
+		perror(r->target);
+	}
+	else
+		unlink_if_heredoc(r);
 	return (fd);
 }
 
 /*
-Função auxiliar: Realiza o dup2 para conectar o arquivo ao STDIN ou STDOUT.
+Aplica o dup2 para o STDIN ou STDOUT e fecha o fd original.
 */
-static void	do_dup2(int fd, int target_fd)
+static void	apply_dup(int fd, int type)
 {
-	dup2(fd, target_fd);
-	close(fd);	// O original não é mais necessário, pois já foi clonado
+	if (type == R_IN || type == R_HDC)
+		dup2(fd, STDIN_FILENO);
+	else if (type == R_OUT || type == R_APP)
+		dup2(fd, STDOUT_FILENO);
+	close(fd);
 }
 
 /*
-Função Principal: Processa todas as redireções da lista.
-Retorno: 0 = sucesso ou 1 = erro
+Itera sobre a lista de redireções e aplica-as.
 */
 int	setup_redirects(t_cmd *cmd)
 {
@@ -71,15 +75,8 @@ int	setup_redirects(t_cmd *cmd)
 	{
 		fd = open_file(tmp);
 		if (fd == -1)
-			return (1);	// Erro ao abrir arquivo
-
-		// Se for Input '<', redireciona o STDIN (0)
-		if (tmp->type == R_IN || tmp->type == R_HDC)
-			do_dup2(fd, STDIN_FILENO);
-		// Se for Output '>' ou Append '>>', redireciona STDOUT (1)
-		else if (tmp->type == R_OUT || tmp->type == R_APP)
-			do_dup2(fd, STDOUT_FILENO);
-
+			return (1);
+		apply_dup(fd, tmp->type);
 		tmp = tmp->next;
 	}
 	return (0);

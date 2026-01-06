@@ -6,15 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 16:53:55 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 13:57:23 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:15:18 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Configura redirecionamentos e chama a execução do comando simples.
-Função chamada apenas pelo processo filho.
+Configura os redirecionamentos de entrada/saida e executa o comando
 */
 static void	child_process(t_shell *sh, t_cmd *cmd, int fd_in, int fd_out)
 {
@@ -34,7 +33,7 @@ static void	child_process(t_shell *sh, t_cmd *cmd, int fd_in, int fd_out)
 }
 
 /*
-Auxiliar: Prepara os fds e chama o child_process.
+Prepara sinais e pipes no processo filho antes de executar
 */
 static void	exec_in_child(t_shell *sh, t_cmd *cmd, int fd_in, int pipefd[2])
 {
@@ -50,8 +49,7 @@ static void	exec_in_child(t_shell *sh, t_cmd *cmd, int fd_in, int pipefd[2])
 }
 
 /*
-Gerencia o fechamento de pipes no processo pai.
-Atualiza o fd_in para o próximo comando ler do pipe atual.
+Gerencia fechamento de FDs no pai e prepara input para proximo comando
 */
 static void	handle_parent_fds(int pipefd[2], int *fd_in, t_cmd *tmp)
 {
@@ -64,10 +62,7 @@ static void	handle_parent_fds(int pipefd[2], int *fd_in, t_cmd *tmp)
 }
 
 /*
-Aguarda os processos filhos.
-Salva o status do último.
-Imprime "Quit" se o filho morreu por SIGQUIT (Ctrl-\).
-Imprime "\n" se o filho morreu por SIGINT (Ctrl-C).
+Aguarda processos filhos e atualiza status de saida conforme sinais
 */
 static void	wait_children(t_shell *sh, int last_pid)
 {
@@ -89,8 +84,7 @@ static void	wait_children(t_shell *sh, int last_pid)
 }
 
 /*
-Loop principal de execução.
-Cria pipes e forks para cada comando na lista.
+Loop principal que gerencia pipes, forks e execucao da pipeline
 */
 void	execute_pipeline(t_shell *sh, t_cmd *cmds)
 {
@@ -99,16 +93,15 @@ void	execute_pipeline(t_shell *sh, t_cmd *cmds)
 	pid_t	pid;
 	t_cmd	*tmp;
 
+	if (process_heredocs(cmds) == 130)
+		return ((void)(sh->last_status = 130));
 	fd_in = -1;
 	setup_signals_ignore();
 	tmp = cmds;
 	while (tmp)
 	{
 		if (tmp->next && pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return ;
-		}
+			return (perror("pipe"));
 		pid = fork();
 		if (pid == 0)
 			exec_in_child(sh, tmp, fd_in, pipefd);
