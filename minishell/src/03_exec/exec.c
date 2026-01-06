@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 16:53:55 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 18:13:19 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 13:57:23 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ static void	handle_parent_fds(int pipefd[2], int *fd_in, t_cmd *tmp)
 
 /*
 Aguarda os processos filhos.
-Salva o status apenas do último comando da pipe.
+Salva o status do último.
+Imprime "Quit" se o filho morreu por SIGQUIT (Ctrl-\).
+Imprime "\n" se o filho morreu por SIGINT (Ctrl-C).
 */
 static void	wait_children(t_shell *sh, int last_pid)
 {
@@ -75,7 +77,13 @@ static void	wait_children(t_shell *sh, int last_pid)
 	if (WIFEXITED(status))
 		sh->last_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
+	{
 		sh->last_status = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_putendl_fd("Quit (core dumped)", 2);
+		else if (WTERMSIG(status) == SIGINT)
+			write(1, "\n", 1);
+	}
 	while (waitpid(-1, NULL, 0) > 0)
 		continue ;
 }

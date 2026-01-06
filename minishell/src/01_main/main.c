@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 16:50:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 14:27:43 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ static void	process_line(t_shell *sh, char *line)
 
 /*
 Loop principal do shell.
-Le a linha e chama o processador auxiliar.
+Verifica g_signal LOGO APÓS readline para garantir que o Ctrl-C
+durante o prompt atualiza o status para 130 imediatamente.
 */
 void	run_shell(t_shell *sh)
 {
@@ -71,6 +72,14 @@ void	run_shell(t_shell *sh)
 		sh->tokens = NULL;
 		sh->cmds = NULL;
 		line = readline("minishell$ ");
+
+		// CORREÇÃO: Verificar sinal aqui, logo após o readline retornar
+		if (g_signal != 0)
+		{
+			sh->last_status = g_signal;
+			g_signal = 0;
+		}
+
 		if (line == NULL)
 		{
 			printf("exit\n");
