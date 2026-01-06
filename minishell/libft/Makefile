@@ -6,103 +6,96 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 17:39:32 by leoaguia          #+#    #+#              #
-#    Updated: 2025/12/03 21:23:02 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/06 23:24:06 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#==============================================================================#
-#                         NAMES & PATHS & OBJECTS                              #
-#==============================================================================#
+# ============================================================================ #
+#                                     COLORS                                   #
+# ============================================================================ #
 
-NAME = libft.a
+RESET       = \033[0;39m
+GRAY        = \033[0;90m
+RED         = \033[0;91m
+GREEN       = \033[0;92m
+YELLOW      = \033[0;93m
+BLUE        = \033[0;94m
+MAGENTA     = \033[0;95m
+CYAN        = \033[0;96m
+WHITE       = \033[0;97m
 
-INCLUDES_DIR = .
+# ============================================================================ #
+#                                   VARIABLES                                  #
+# ============================================================================ #
 
-PRINTF_SRCS = \
-./ft_printf/ft_printf.c \
-./ft_printf/ft_put_char.c \
-./ft_printf/ft_put_digit.c \
-./ft_printf/ft_put_ptr.c \
-./ft_printf/ft_put_str.c \
+NAME        =   libft.a
+CC          =   cc
+CFLAGS      =   -Wall -Wextra -Werror -I inc
 
-GNL_SRCS = ./get_next_line/get_next_line.c
+# Directories
+SRC_DIR     =   src
+OBJ_DIR     =   obj
+INC_DIR     =   inc
 
-SRCS = \
-./utils/ft_atoi.c \
-./utils/ft_bzero.c \
-./utils/ft_calloc.c \
-./utils/ft_isalnum.c \
-./utils/ft_isalpha.c \
-./utils/ft_isascii.c \
-./utils/ft_isdigit.c \
-./utils/ft_isprint.c \
-./utils/ft_itoa.c \
-./utils/ft_lstadd_back.c \
-./utils/ft_lstadd_front.c \
-./utils/ft_lstclear.c \
-./utils/ft_lstdelone.c \
-./utils/ft_lstiter.c \
-./utils/ft_lstlast.c \
-./utils/ft_lstmap.c \
-./utils/ft_lstnew.c \
-./utils/ft_lstsize.c \
-./utils/ft_memchr.c \
-./utils/ft_memcmp.c \
-./utils/ft_memcpy.c \
-./utils/ft_memmove.c \
-./utils/ft_memset.c \
-./utils/ft_putchar_fd.c \
-./utils/ft_putendl_fd.c \
-./utils/ft_putnbr_fd.c \
-./utils/ft_putstr_fd.c \
-./utils/ft_split.c \
-./utils/ft_strchr.c \
-./utils/ft_strcmp.c	\
-./utils/ft_strdup.c \
-./utils/ft_striteri.c \
-./utils/ft_strjoin.c \
-./utils/ft_strjoin3.c \
-./utils/ft_strlcat.c \
-./utils/ft_strlcpy.c \
-./utils/ft_strlen.c \
-./utils/ft_strmapi.c \
-./utils/ft_strncmp.c \
-./utils/ft_strnstr.c \
-./utils/ft_strrchr.c \
-./utils/ft_strtrim.c \
-./utils/ft_substr.c \
-./utils/ft_tolower.c \
-./utils/ft_toupper.c
+# Source Files
+SRC_CTYPE   =   ft_isalnum.c ft_isalpha.c ft_isascii.c ft_isdigit.c \
+                ft_isprint.c ft_tolower.c ft_toupper.c
 
-PRINTF_OBJS = $(PRINTF_SRCS:.c=.o)
-GNL_OBJS = $(GNL_SRCS:.c=.o)
-OBJS = $(SRCS:.c=.o)
+SRC_MEM     =   ft_bzero.c ft_calloc.c ft_memchr.c ft_memcmp.c \
+                ft_memcpy.c ft_memmove.c ft_memset.c
 
-#==============================================================================#
-#                               COMPILATION                                    #
-#==============================================================================#
-CC = cc
+SRC_IO      =   ft_putchar_fd.c ft_putendl_fd.c ft_putnbr_fd.c ft_putstr_fd.c
 
-CFLAGS = -Wall -Werror -Wextra
+SRC_LST     =   ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c \
+                ft_lstdelone.c ft_lstiter.c ft_lstlast.c ft_lstmap.c \
+                ft_lstnew.c ft_lstsize.c
 
-#==============================================================================#
-#                                  RULES                                       #
-#==============================================================================#
+SRC_STR     =   ft_atoi.c ft_itoa.c ft_split.c ft_strchr.c ft_strdup.c \
+                ft_striteri.c ft_strjoin.c ft_strjoin3.c ft_strlcat.c \
+                ft_strlcpy.c ft_strlen.c ft_strmapi.c ft_strncmp.c \
+                ft_strnstr.c ft_strrchr.c ft_strtrim.c ft_substr.c \
+                ft_strcmp.c
+
+SRC_PRINTF  =   ft_printf.c ft_put_char.c ft_put_digit.c ft_put_ptr.c \
+                ft_put_str.c
+
+SRC_GNL     =   get_next_line.c
+
+# Concatenate all
+SRCS        =   $(addprefix $(SRC_DIR)/ctype/, $(SRC_CTYPE)) \
+                $(addprefix $(SRC_DIR)/memory/, $(SRC_MEM)) \
+                $(addprefix $(SRC_DIR)/io/, $(SRC_IO)) \
+                $(addprefix $(SRC_DIR)/list/, $(SRC_LST)) \
+                $(addprefix $(SRC_DIR)/string/, $(SRC_STR)) \
+                $(addprefix $(SRC_DIR)/printf/, $(SRC_PRINTF)) \
+                $(addprefix $(SRC_DIR)/gnl/, $(SRC_GNL))
+
+OBJS        =   $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+
+# ============================================================================ #
+#                                     RULES                                    #
+# ============================================================================ #
 
 all: $(NAME)
-$(NAME): $(OBJS) $(PRINTF_OBJS) $(GNL_OBJS)
-	ar rcs $(NAME) $(OBJS) $(PRINTF_OBJS) $(GNL_OBJS)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I $(INCLUDES_DIR) -c $< -o $@
+$(NAME): $(OBJS)
+	@ar rcs $(NAME) $(OBJS)
+	@echo "$(GREEN)Libft compiled successfully!$(RESET)"
+
+# Compiling Objects with Custom Message
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "$(CYAN)[LIBFT] Compiling: $(GRAY)$<$(RESET)"
 
 clean:
-	rm -rf $(OBJS) $(PRINTF_OBJS) $(GNL_OBJS)
+	@rm -rf $(OBJ_DIR)
+	@echo "$(YELLOW)[LIBFT] Object files cleaned.$(RESET)"
 
 fclean: clean
-	rm -rf $(NAME)
+	@rm -f $(NAME)
+	@echo "$(RED)[LIBFT] Binary removed.$(RESET)"
 
-re: fclean
-	make
+re: fclean all
 
 .PHONY: all clean fclean re

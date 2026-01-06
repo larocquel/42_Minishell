@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:18:08 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 15:42:16 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/06 21:40:50 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stddef.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include "./ft_printf/ft_printf.h"
-# include "./get_next_line/get_next_line.h"
+# include "./ft_printf.h"
+# include "./get_next_line.h"
 
 typedef struct s_list
 {

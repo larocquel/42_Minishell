@@ -3,129 +3,103 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+         #
+#    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/05 23:01:07 by lla-rocq         ###   ########.fr        #
+#    Updated: 2026/01/06 23:23:22 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#									NAME										#
+# ============================================================================ #
+#                                     COLORS                                   #
+# ============================================================================ #
 
-NAME		= minishell
+RESET       = \033[0;39m
+GRAY        = \033[0;90m
+RED         = \033[0;91m
+GREEN       = \033[0;92m
+YELLOW      = \033[0;93m
+BLUE        = \033[0;94m
+MAGENTA     = \033[0;95m
+CYAN        = \033[0;96m
+WHITE       = \033[0;97m
 
+# ============================================================================ #
+#                                   VARIABLES                                  #
+# ============================================================================ #
 
-#								COMPILATION										#
+NAME        = minishell
+MAKEFLAGS   += --no-print-directory
 
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror
-RLFLAGS		= -lreadline
+CC          = cc
+CFLAGS      = -Wall -Wextra -Werror
+RLFLAGS     = -lreadline
 
+SRC_DIR     = src
+OBJ_DIR     = obj
+LIBFT_DIR   = libft
+LIBFT       = $(LIBFT_DIR)/libft.a
 
-#								DIRECTORIES										#
+INCLUDES    = -Iinclude -I$(LIBFT_DIR)/inc
 
-SRC_DIR		= src
-OBJ_DIR		= obj
-LIBFT_DIR	= libft
+SRC         = $(SRC_DIR)/01_main/main.c                 \
+              $(SRC_DIR)/01_main/cleanup.c              \
+              $(SRC_DIR)/02_parsing/lexer.c             \
+              $(SRC_DIR)/02_parsing/lexer_utils.c       \
+              $(SRC_DIR)/02_parsing/parser.c            \
+              $(SRC_DIR)/02_parsing/parser_utils.c      \
+              $(SRC_DIR)/02_parsing/expand.c            \
+              $(SRC_DIR)/02_parsing/expand_utils.c      \
+              $(SRC_DIR)/03_exec/exec.c                 \
+              $(SRC_DIR)/03_exec/exec_simple.c          \
+              $(SRC_DIR)/03_exec/exec_utils.c           \
+              $(SRC_DIR)/04_builtins/builtins.c         \
+              $(SRC_DIR)/04_builtins/builtins_ops.c     \
+              $(SRC_DIR)/04_builtins/builtins_utils.c   \
+              $(SRC_DIR)/05_redirect/redirect.c         \
+              $(SRC_DIR)/05_redirect/heredoc.c          \
+              $(SRC_DIR)/06_env/env.c                   \
+              $(SRC_DIR)/06_env/env_utils.c             \
+              $(SRC_DIR)/07_signals/signals.c
 
+OBJ         = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-#							LIBFT = libft.a path								#
-
-LIBFT		= $(LIBFT_DIR)/libft.a
-
-
-#		Includes: - include/ for minishell.h and - libft/ contém libft.h		#
-
-INCLUDES	= -Iinclude -I$(LIBFT_DIR)
-
-
-#								ALL .c FILES									#
-
-SRC			= $(SRC_DIR)/01_main/main.c					\
-			  $(SRC_DIR)/01_main/cleanup.c				\
-			  $(SRC_DIR)/02_parsing/lexer.c				\
-			  $(SRC_DIR)/02_parsing/lexer_utils.c		\
-			  $(SRC_DIR)/02_parsing/parser.c			\
-			  $(SRC_DIR)/02_parsing/parser_utils.c		\
-			  $(SRC_DIR)/02_parsing/expand.c			\
-			  $(SRC_DIR)/02_parsing/expand_utils.c		\
-			  $(SRC_DIR)/03_exec/exec.c					\
-			  $(SRC_DIR)/03_exec/exec_simple.c			\
-			  $(SRC_DIR)/03_exec/exec_utils.c			\
-			  $(SRC_DIR)/04_builtins/builtins.c			\
-			  $(SRC_DIR)/04_builtins/builtins_ops.c		\
-			  $(SRC_DIR)/04_builtins/builtins_utils.c	\
-			  $(SRC_DIR)/05_redirect/redirect.c			\
-			  $(SRC_DIR)/05_redirect/heredoc.c			\
-			  $(SRC_DIR)/06_env/env.c					\
-			  $(SRC_DIR)/06_env/env_utils.c				\
-			  $(SRC_DIR)/07_signals/signals.c
-
-#					CONVERSION: src/arquivo.c → obj/arquivo.o					#
-
-OBJ			= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-
-
-#					MAIN RULE (FIRST: LIBFT SCND: MINISHELL)					#
+# ============================================================================ #
+#                                     RULES                                    #
+# ============================================================================ #
 
 all: $(LIBFT) $(NAME)
 
-#						Supression of readline leaks rule						#
+# Supression file creation (Silent)
 sup:
-	echo "{\n\
-   leak readline\n\
-   Memcheck:Leak\n\
-   ...\n\
-   fun:readline\n\
-}\n\
-{\n\
-   leak add_history\n\
-   Memcheck:Leak\n\
-   ...\n\
-   fun:add_history\n\
-}" > readline.supp
+	@echo "{\n   leak readline\n   Memcheck:Leak\n   ...\n   fun:readline\n}\n{\n   leak add_history\n   Memcheck:Leak\n   ...\n   fun:add_history\n}" > readline.supp
 
-
-#								BUILD LIBFT										#
+# Build Libft (Silent call)
 $(LIBFT): sup
-	$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR)
 
-
-#									LINK										#
-#							$(OBJ) → ALL .o FROM MINISHELL						#
-#							$(LIBFT) → LINK LIBFT								#
-#							$(RLFLAGS) → LINK READLINE							#
-
+# Link Minishell
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(RLFLAGS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(RLFLAGS) -o $(NAME)
+	@echo "$(GREEN)Minishell compiled successfully!$(RESET)"
 
-
-#							RULE TO BUILD ANY .c IN obj/						#
-#							- CREATES obj/ IF DOES NOT EXIST					#
-#							- COMPILE THE .c AS .o								#
-
+# Compile Minishell Objects
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-
-#								BASIC CLEANING									#
-#								- DELETE ALL .o FILES							#
-#								- RUNS clean INSIDE LIBFT						#
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@echo "$(YELLOW)[MINISHELL] Compiling: $(WHITE)$<$(RESET)"
 
 clean:
-	rm -rf $(OBJ_DIR)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@rm -rf $(OBJ_DIR)
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@echo "$(BLUE)[MINISHELL] Objects cleaned.$(RESET)"
 
+fclean:
+	@rm -rf $(OBJ_DIR)
+	@rm -f $(NAME) readline.supp
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@echo "$(RED)[MINISHELL] Binary removed.$(RESET)"
 
-#								TOTAL CLEANING									#
-#								- DELETE MINISHELL								#
-#								- DELETE ANYTHING RELATED TO LIBFT				#
-
-fclean: clean
-	rm -f $(NAME) readline.supp
-	$(MAKE) -C $(LIBFT_DIR) fclean
-
-
-#								FULL REBUILD									#
 re: fclean all
+
+.PHONY: all clean fclean re sup
