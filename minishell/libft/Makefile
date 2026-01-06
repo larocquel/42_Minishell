@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 17:39:32 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/06 23:24:06 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/06 23:45:03 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,7 +86,7 @@ $(NAME): $(OBJS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "$(CYAN)[LIBFT] Compiling: $(GRAY)$<$(RESET)"
+	@echo "$(CYAN)[LIBFT] Compiling: $(WHITE)$<$(RESET)"
 
 clean:
 	@rm -rf $(OBJ_DIR)

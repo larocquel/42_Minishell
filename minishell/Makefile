@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/06 23:23:22 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/06 23:45:24 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,20 @@ BLUE        = \033[0;94m
 MAGENTA     = \033[0;95m
 CYAN        = \033[0;96m
 WHITE       = \033[0;97m
+
+# --- ASCII ART DEFINITION (USANDO DEFINE) ---
+define HEADER_ART
+$(RED)
+ (  `    )\ )  ( /(  )\ )  ( /(       )\ )  )\ )
+ )\))(  (()/(  )\())(()/(  )\()) (   (()/( (()/(
+((_)()\  /(_))((_)\  /(_))((_)\  )\   /(_)) /(_))
+(_()((_)(_))   _((_)(_))   _((_)((_) (_))  (_))
+|  \/  ||_ _| | \| ||_ _| | || || __|| |   | |
+| |\/| | | |  | .` | | |  | __ || _| | |__ | |__
+|_|  |_||___| |_|\_||___| |_||_||___||____||____|
+$(RESET)
+endef
+export HEADER_ART
 
 # ============================================================================ #
 #                                   VARIABLES                                  #
@@ -82,12 +96,13 @@ $(LIBFT): sup
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(RLFLAGS) -o $(NAME)
 	@echo "$(GREEN)Minishell compiled successfully!$(RESET)"
+	@printf "$$HEADER_ART"
 
 # Compile Minishell Objects
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-	@echo "$(YELLOW)[MINISHELL] Compiling: $(WHITE)$<$(RESET)"
+	@echo "$(CYAN)[MINISHELL] Compiling: $(WHITE)$<$(RESET)"
 
 clean:
 	@rm -rf $(OBJ_DIR)
