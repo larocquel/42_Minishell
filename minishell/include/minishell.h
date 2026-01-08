@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 17:54:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 18:50:33 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <sys/wait.h>
+# include <limits.h>
 
 /* Structures */
 

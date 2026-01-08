@@ -3,65 +3,83 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 22:21:19 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/08 18:50:25 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Função auxiliar interna para limpar memória e sair.
-Poupa linhas no ft_exit.
+Verifica overflow de long long. Retorna 1 se ok, 0 se erro.
+Salva o resultado em *out.
+Ignora espacos iniciais igual ao bash.
 */
-static void	builtin_exit_cleanup(t_shell *sh, int status)
+static int	parse_long_long(const char *str, long long *out)
 {
-	free_env_list(sh->env_list);
-	if (sh->cmds)
-		free_cmds(sh->cmds);
-	if (sh->tokens)
-		free_tokens(sh->tokens);
-	rl_clear_history();
-	exit(status);
+	unsigned long long	res;
+	int					sign;
+	int					i;
+
+	i = 0;
+	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	sign = 1;
+	if (str[i] == '-' || str[i] == '+')
+		if (str[i++] == '-')
+			sign = -1;
+	if (!ft_isdigit(str[i]))
+		return (0);
+	res = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		if (res > (unsigned long long)LLONG_MAX / 10
+			|| (res == (unsigned long long)LLONG_MAX / 10
+				&& (unsigned long long)(str[i] - '0') > \
+				(unsigned long long)LLONG_MAX % 10 + (sign == -1)))
+			return (0);
+		res = res * 10 + (str[i++] - '0');
+	}
+	*out = (long long)(res * sign);
+	return (1);
 }
 
 /*
 Builtin: exit
-Sai do shell, limpando toda a memória alocada.
-Trata argumentos numéricos e erros de sintaxe.
+Se numero > long long ou nao numerico -> erro e exit(2).
+Se OK -> exit(num % 256).
+Usa exit_child para limpar memoria.
 */
 int	ft_exit(t_shell *sh, t_cmd *cmd)
 {
-	int	status;
+	long long	val;
 
 	ft_putendl_fd("exit", 2);
 	if (!cmd->argv[1])
-		status = sh->last_status;
-	else
+		exit_child(sh, sh->last_status);
+	if (!parse_long_long(cmd->argv[1], &val))
 	{
-		if (!is_numeric(cmd->argv[1]))
-		{
-			ft_putstr_fd("minishell: exit: ", 2);
-			ft_putstr_fd(cmd->argv[1], 2);
-			ft_putendl_fd(": numeric argument required", 2);
-			builtin_exit_cleanup(sh, 2);
-		}
-		if (cmd->argv[2])
-		{
-			ft_putendl_fd("minishell: exit: too many arguments", 2);
-			return (1);
-		}
-		status = ft_atoi(cmd->argv[1]);
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(cmd->argv[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		exit_child(sh, 2);
 	}
-	builtin_exit_cleanup(sh, status);
+	if (cmd->argv[2])
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", 2);
+		return (1);
+	}
+	exit_child(sh, val % 256);
 	return (0);
 }
 
 /*
 Builtin: env
-Imprime variáveis exportadas (que têm valor).
+Imprime variaveis de ambiente que possuem valor definido.
 */
 int	ft_env(t_shell *sh)
 {
@@ -83,7 +101,7 @@ int	ft_env(t_shell *sh)
 
 /*
 Builtin: pwd
-Imprime diretório atual.
+Imprime diretorio atual de trabalho.
 */
 int	ft_pwd(void)
 {
@@ -100,7 +118,7 @@ int	ft_pwd(void)
 
 /*
 Builtin: echo
-Requer helper check_n_flag (builtins_utils.c)
+Imprime argumentos. Suporta flag -n (sem quebra de linha).
 */
 int	ft_echo(t_cmd *cmd)
 {
@@ -109,10 +127,12 @@ int	ft_echo(t_cmd *cmd)
 
 	i = 1;
 	n_flag = 0;
-	while (cmd->argv[i] && check_n_flag(cmd->argv[i]))
+	if (cmd->argv[1] && check_n_flag(cmd->argv[1]))
 	{
 		n_flag = 1;
 		i++;
+		while (cmd->argv[i] && check_n_flag(cmd->argv[i]))
+			i++;
 	}
 	while (cmd->argv[i])
 	{
