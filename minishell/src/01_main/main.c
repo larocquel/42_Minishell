@@ -6,22 +6,20 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:22:58 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 00:52:41 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Roteador de comandos:
-Decide se o comando deve rodar no processo PAI (Builtins de estado)
-ou se deve ir para o executor geral (Pipes e Externos).
+Decide se roda builtin no pai ou manda para o pipeline.
 */
 void	execute_command(t_shell *sh, t_cmd *cmds)
 {
-	if (!cmds || !cmds->argv || !cmds->argv[0])
+	if (!cmds)
 		return ;
-	if (!cmds->next)
+	if (cmds->argv && cmds->argv[0] && !cmds->next)
 	{
 		if (ft_strcmp(cmds->argv[0], "cd") == 0)
 			return ((void)(sh->last_status = ft_cd(sh, cmds)));
@@ -36,8 +34,7 @@ void	execute_command(t_shell *sh, t_cmd *cmds)
 }
 
 /*
-Auxiliar do loop principal.
-Executa a sequencia: Lexer -> Expander -> Parser -> Execucao -> Limpeza.
+Processa a linha: Lexer, Expander, Parser e Executor.
 */
 static void	process_line(t_shell *sh, char *line)
 {
@@ -58,9 +55,7 @@ static void	process_line(t_shell *sh, char *line)
 }
 
 /*
-Loop principal do shell.
-Verifica g_signal LOGO APÓS readline para garantir que o Ctrl-C
-durante o prompt atualiza o status para 130 imediatamente.
+Loop principal do shell com tratamento de sinal no prompt.
 */
 void	run_shell(t_shell *sh)
 {
@@ -89,10 +84,7 @@ void	run_shell(t_shell *sh)
 }
 
 /*
-Ponto de entrada do programa.
-- Inicializa o shell e ambiente.
-- Entra no loop principal.
-- Limpeza final.
+Inicializacao e limpeza final.
 */
 int	main(int argc, char **argv, char **envp)
 {

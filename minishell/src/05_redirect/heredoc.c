@@ -6,120 +6,113 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 12:26:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:02:27 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 00:56:03 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Gera nomes unicos para os temporarios (.heredoc_0, .heredoc_1, ...)
+Gera nome unico para arquivo temporario.
 */
-static char	*gen_heredoc_name(void)
+static char	*generate_heredoc_name(void)
 {
-	static int	i;
+	static int	i = 0;
 	char		*num;
 	char		*name;
 
 	num = ft_itoa(i++);
-	name = ft_strjoin(".heredoc_", num);
+	name = ft_strjoin("/tmp/.minishell_hd_", num);
 	free(num);
 	return (name);
 }
 
 /*
-Handler de sinal exclusivo para o processo filho do heredoc.
-Sai imediatamente com 130.
+Loop de leitura do readline. Retorna 130 se interrompido por sinal.
 */
-static void	heredoc_sig_handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	exit(130);
-}
-
-/*
-Loop de leitura executado SOMENTE no processo filho.
-*/
-static void	read_loop_child(int fd, char *delim)
+static int	heredoc_loop(int fd, char *delimiter)
 {
 	char	*line;
 
-	signal(SIGINT, heredoc_sig_handler);
 	while (1)
 	{
+		if (g_signal == SIGINT)
+			return (130);
 		line = readline("> ");
-		if (!line)
+		if (g_signal == SIGINT)
 		{
-			ft_putendl_fd("minishell: warning: heredoc detected EOF", 2);
-			break ;
+			if (line)
+				free(line);
+			return (130);
 		}
-		if (ft_strcmp(line, delim) == 0)
+		if (!line)
+			break ;
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		ft_putendl_fd(line, fd);
 		free(line);
 	}
-	close(fd);
-	exit(0);
+	return (0);
 }
 
 /*
-Cria um filho para ler o heredoc.
-O pai espera e verifica se o filho saiu normalmente ou via Ctrl+C.
+Prepara o arquivo, executa o loop e substitui o target do redirecionamento.
 */
 static int	exec_heredoc(t_redir *r)
 {
 	int		fd;
-	char	*name;
-	int		pid;
+	char	*filename;
 	int		status;
 
-	name = gen_heredoc_name();
-	fd = open(name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		return (free(name), 1);
-	setup_signals_ignore();
-	pid = fork();
-	if (pid == 0)
-		read_loop_child(fd, r->target);
-	close(fd);
-	waitpid(pid, &status, 0);
-	setup_signals_interactive();
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+	filename = generate_heredoc_name();
+	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
 	{
-		unlink(name);
-		return (free(name), 130);
+		perror("minishell: heredoc");
+		free(filename);
+		return (1);
+	}
+	status = heredoc_loop(fd, r->target);
+	close(fd);
+	if (status == 130)
+	{
+		unlink(filename);
+		free(filename);
+		return (130);
 	}
 	free(r->target);
-	r->target = name;
+	r->target = filename;
 	r->type = R_IN;
 	return (0);
 }
 
 /*
-Funcao Principal: Varre comandos e resolve heredocs um a um.
+Itera sobre comandos e redirecoes processando heredocs.
 */
 int	process_heredocs(t_cmd *cmds)
 {
+	t_cmd	*tmp;
 	t_redir	*r;
+	int		ret;
 
-	while (cmds)
+	tmp = cmds;
+	while (tmp)
 	{
-		r = cmds->redirs;
+		r = tmp->redirs;
 		while (r)
 		{
 			if (r->type == R_HDC)
 			{
-				if (exec_heredoc(r) == 130)
-					return (130);
+				ret = exec_heredoc(r);
+				if (ret != 0)
+					return (ret);
 			}
 			r = r->next;
 		}
-		cmds = cmds->next;
+		tmp = tmp->next;
 	}
 	return (0);
 }

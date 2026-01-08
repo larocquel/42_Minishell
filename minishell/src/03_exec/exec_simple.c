@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 17:57:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:20:11 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 00:55:40 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 /*
 Função auxiliar para encerrar processo filho limpando TUDO.
-Remove o "Still Reachable" do Valgrind nos builtins.
 */
 void	exit_child(t_shell *sh, int status)
 {
@@ -29,7 +28,6 @@ void	exit_child(t_shell *sh, int status)
 
 /*
 Lida com erros de execução baseados no errno.
-Limpa memória antes de sair.
 */
 static void	handle_exec_error(char *cmd, t_shell *sh)
 {
@@ -58,7 +56,6 @@ static void	handle_exec_error(char *cmd, t_shell *sh)
 
 /*
 Verifica e executa builtins dentro do processo filho.
-Se for builtin, executa e sai com exit_child.
 */
 static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 {
@@ -73,20 +70,20 @@ static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 		|| ft_strcmp(cmd->argv[0], "cd") == 0)
 		exit_child(sh, 0);
 	if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		ft_exit(sh, cmd);
+		exit_child(sh, ft_exit(sh, cmd));
 }
 
 /*
-Executa um comando simples (sem pipe) ou o último de uma pipeline.
-1. Checa builtins.
-2. Resolve path.
-3. Executa (execve).
+Executa um comando simples.
+CRUCIAL: Verifica se argv existe antes de prosseguir.
 */
 void	exec_simple_cmd(t_shell *sh, t_cmd *cmd)
 {
 	char	**env_arr;
 	char	*path;
 
+	if (!cmd->argv || !cmd->argv[0])
+		exit_child(sh, 0);
 	check_builtin_child(sh, cmd);
 	if (ft_strchr(cmd->argv[0], '/'))
 		path = ft_strdup(cmd->argv[0]);
@@ -94,10 +91,8 @@ void	exec_simple_cmd(t_shell *sh, t_cmd *cmd)
 		path = find_executable(cmd->argv[0], sh->env_list);
 	if (!path)
 	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(cmd->argv[0], 2);
-		ft_putendl_fd(": command not found", 2);
-		exit_child(sh, 127);
+		errno = ENOENT;
+		handle_exec_error(cmd->argv[0], sh);
 	}
 	env_arr = env_to_array(sh->env_list);
 	execve(path, cmd->argv, env_arr);
