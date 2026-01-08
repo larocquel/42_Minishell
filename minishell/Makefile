@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/06 23:45:24 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/08 17:55:33 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,6 +70,7 @@ SRC         = $(SRC_DIR)/01_main/main.c                 \
               $(SRC_DIR)/04_builtins/builtins.c         \
               $(SRC_DIR)/04_builtins/builtins_ops.c     \
               $(SRC_DIR)/04_builtins/builtins_utils.c   \
+              $(SRC_DIR)/04_builtins/export_utils.c     \
               $(SRC_DIR)/05_redirect/redirect.c         \
               $(SRC_DIR)/05_redirect/heredoc.c          \
               $(SRC_DIR)/06_env/env.c                   \

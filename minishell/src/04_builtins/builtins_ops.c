@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:57:37 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:23:27 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:53:18 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static void	process_export_arg(t_shell *sh, char *arg)
 
 /*
 Builtin: export
+Alterado: Se nao tiver argumentos, chama print_sorted_export.
 */
 int	ft_export(t_shell *sh, t_cmd *cmd)
 {
@@ -70,7 +71,10 @@ int	ft_export(t_shell *sh, t_cmd *cmd)
 
 	i = 1;
 	if (!cmd->argv[1])
-		return (ft_env(sh));
+	{
+		print_sorted_export(sh);
+		return (0);
+	}
 	while (cmd->argv[i])
 	{
 		if (!is_valid_key(cmd->argv[i]))

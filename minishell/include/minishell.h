@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 15:44:19 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/08 17:54:18 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ int		check_n_flag(char *arg);
 void	update_wd_env(t_shell *sh, char *old);
 void	print_export_error(char *arg);
 int		is_valid_key(char *str);
+/* export_utils.c */
+void	print_sorted_export(t_shell *sh);
 
 /* 05_redirect */
 /* redirect.c */
