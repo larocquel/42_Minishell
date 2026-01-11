@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 18:50:25 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/11 14:54:02 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,10 @@ static int	parse_long_long(const char *str, long long *out)
 	res = 0;
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		if (res > (unsigned long long)LLONG_MAX / 10
+		if (!ft_isdigit(str[i]) || res > (unsigned long long)LLONG_MAX / 10
 			|| (res == (unsigned long long)LLONG_MAX / 10
-				&& (unsigned long long)(str[i] - '0') > \
-				(unsigned long long)LLONG_MAX % 10 + (sign == -1)))
+				&& (unsigned long long)(str[i] - '0')
+			> (unsigned long long)LLONG_MAX % 10 + (sign == -1)))
 			return (0);
 		res = res * 10 + (str[i++] - '0');
 	}

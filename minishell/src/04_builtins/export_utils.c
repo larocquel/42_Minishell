@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:52:06 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 17:52:20 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/11 15:06:21 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,17 @@ static void	sort_env_array(t_env **arr, int size)
 }
 
 /*
+Funcao auxiliar para imprimir uma unica linha do export.
+*/
+static void	print_one_export(t_env *node)
+{
+	printf("declare -x %s", node->key);
+	if (node->value)
+		printf("=\"%s\"", node->value);
+	printf("\n");
+}
+
+/*
 Função principal chamada pelo ft_export quando sem argumentos.
 1. Cria array de ponteiros.
 2. Ordena.
@@ -84,11 +95,6 @@ void	print_sorted_export(t_shell *sh)
 	sort_env_array(arr, count);
 	i = -1;
 	while (++i < count)
-	{
-		printf("declare -x %s", arr[i]->key);
-		if (arr[i]->value)
-			printf("=\"%s\"", arr[i]->value);
-		printf("\n");
-	}
+		print_one_export(arr[i]);
 	free(arr);
 }
