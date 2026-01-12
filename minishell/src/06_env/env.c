@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 18:43:30 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 23:35:23 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:03:22 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Auxiliar estática: Separa KEY=VAL e adiciona na lista.
+Static helper: Separates KEY=VAL and adds to the list.
 */
 static void	parse_and_add_env(t_shell *sh, char *env_str)
 {
@@ -33,7 +33,7 @@ static void	parse_and_add_env(t_shell *sh, char *env_str)
 }
 
 /*
-Inicializa o ambiente copiando o envp do sistema.
+Initializes the environment by copying the system's envp.
 */
 void	init_env(t_shell *sh, char **envp)
 {
@@ -49,7 +49,7 @@ void	init_env(t_shell *sh, char **envp)
 }
 
 /*
-Retorna o VALOR de uma variável (string).
+Returns the VALUE of a variable (string).
 */
 char	*get_env_value(t_env *env, char *key)
 {
@@ -62,7 +62,7 @@ char	*get_env_value(t_env *env, char *key)
 }
 
 /*
-Atualiza ou cria uma variavel.
+Updates or creates a variable.
 */
 void	env_update(t_shell *sh, char *key, char *value)
 {
@@ -90,7 +90,7 @@ void	env_update(t_shell *sh, char *key, char *value)
 }
 
 /*
-Atualiza o SHLVL seguindo as regras do Bash.
+Updates SHLVL following Bash rules.
 */
 void	increment_shell_level(t_shell *sh)
 {

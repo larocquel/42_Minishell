@@ -6,14 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 00:52:41 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:58:14 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Decide se roda builtin no pai ou manda para o pipeline.
+Decides whether to run builtin in parent or send to pipeline.
 */
 void	execute_command(t_shell *sh, t_cmd *cmds)
 {
@@ -34,7 +34,7 @@ void	execute_command(t_shell *sh, t_cmd *cmds)
 }
 
 /*
-Processa a linha: Lexer, Expander, Parser e Executor.
+Processes the line: Lexer, Expander, Parser and Executor.
 */
 static void	process_line(t_shell *sh, char *line)
 {
@@ -55,7 +55,7 @@ static void	process_line(t_shell *sh, char *line)
 }
 
 /*
-Loop principal do shell com tratamento de sinal no prompt.
+Main shell loop with signal handling in prompt.
 */
 void	run_shell(t_shell *sh)
 {
@@ -84,7 +84,7 @@ void	run_shell(t_shell *sh)
 }
 
 /*
-Inicializacao e limpeza final.
+Initialization and final cleanup.
 */
 int	main(int argc, char **argv, char **envp)
 {

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 14:25:17 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 22:27:54 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:02:01 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Auxiliar para ft_exit: Verifica se string é número
+Helper for ft_exit: Checks if string is numeric
 */
 int	is_numeric(char *str)
 {
@@ -32,8 +32,8 @@ int	is_numeric(char *str)
 }
 
 /*
-Verifica flag -n.
-Retorna 1 se for -n válido (ex: -n, -nnnn), 0 caso contrário.
+Checks -n flag.
+Returns 1 if valid -n (ex: -n, -nnnn), 0 otherwise.
 */
 int	check_n_flag(char *arg)
 {
@@ -52,8 +52,8 @@ int	check_n_flag(char *arg)
 }
 
 /*
-Helper para o CD:
-Atualiza OLDPWD com o caminho antigo (old) e PWD com o atual.
+Helper for CD:
+Updates OLDPWD with the old path (old) and PWD with the current one.
 */
 void	update_wd_env(t_shell *sh, char *old)
 {
@@ -66,7 +66,7 @@ void	update_wd_env(t_shell *sh, char *old)
 }
 
 /*
-Helper para export: Imprime erro de identificador inválido
+Helper for export: Prints invalid identifier error
 */
 void	print_export_error(char *arg)
 {
@@ -76,11 +76,11 @@ void	print_export_error(char *arg)
 }
 
 /*
-Verifica se uma string é um identificador válido para variáveis de ambiente.
-Regras:
-1. Começar com letra ou _.
-2. Resto alfanumérico ou _.
-3. Parar no '='.
+Checks if a string is a valid identifier for environment variables.
+Rules:
+1. Must start with letter or _.
+2. Rest must be alphanumeric or _.
+3. Stop at '='.
 */
 int	is_valid_key(char *str)
 {

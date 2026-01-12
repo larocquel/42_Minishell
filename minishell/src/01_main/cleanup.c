@@ -6,15 +6,15 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/01 16:18:21 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:21:38 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:58:14 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Libera a lista de tokens.
-Percorre a lista e libera a string 'value' e o próprio nó 't_token'.
+Frees the token list.
+Traverses the list and frees the 'value' string and the 't_token' node itself.
 */
 void	free_tokens(t_token *tokens)
 {
@@ -31,8 +31,8 @@ void	free_tokens(t_token *tokens)
 }
 
 /*
-Libera um array de strings (char **)
-Libera cada string individualmente e depois o array de ponteiros.
+Frees an array of strings (char **)
+Frees each string individually and then the pointer array.
 */
 void	free_array(char **arr)
 {
@@ -50,8 +50,8 @@ void	free_array(char **arr)
 }
 
 /*
-Libera a lista de redirecionamentos (t_redir).
-Percorre a lista e libera a string 'target' e o nó 't_redir'.
+Frees the redirections list (t_redir).
+Traverses the list and frees the 'target' string and the 't_redir' node.
 */
 void	free_redirs(t_redir *r)
 {
@@ -68,9 +68,9 @@ void	free_redirs(t_redir *r)
 }
 
 /*
-Libera a lista de comandos (t_cmd).
-Percorre a lista e libera o array 'argv',
-a lista de redirecionamentos 'redirs' e o nó 't_cmd'.
+Frees the commands list (t_cmd).
+Traverses the list and frees the 'argv' array,
+the 'redirs' redirections list and the 't_cmd' node.
 */
 void	free_cmds(t_cmd *cmds)
 {
@@ -89,8 +89,8 @@ void	free_cmds(t_cmd *cmds)
 }
 
 /*
-Libera a lista de variáveis de ambiente (t_env).
-Percorre a lista e libera as strings 'key' e 'value', e o nó 't_env'.
+Frees the environment variables list (t_env).
+Traverses the list and frees the 'key' and 'value' strings, and the 't_env' node.
 */
 void	free_env_list(t_env *env)
 {

@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 18:50:33 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:04:19 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@
 
 /* Structures */
 
-/* Var global para sinais */
+/* Global var for signals */
 extern volatile sig_atomic_t	g_signal;
 
-/* Macros para o lexer (WORD = 0, PIPE = 1, ...) */
+/* Macros for the lexer (WORD = 0, PIPE = 1, ...) */
 typedef enum e_type
 {
 	WORD,
@@ -42,7 +42,7 @@ typedef enum e_type
 	R_HDC
 }	t_type;
 
-/* Estrutura de tokens */
+/* Token structure */
 typedef struct s_token
 {
 	t_type			type;
@@ -50,7 +50,7 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-/* Estrutura de redirecoes */
+/* Redirection structure */
 typedef struct s_redir
 {
 	t_type			type;
@@ -58,7 +58,7 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
-/* Estrutura de comandos */
+/* Command structure */
 typedef struct s_cmd
 {
 	char			**argv;
@@ -66,7 +66,7 @@ typedef struct s_cmd
 	struct s_cmd	*next;
 }	t_cmd;
 
-/* Estrutura para variaveis de ambiente */
+/* Structure for environment variables */
 typedef struct s_env
 {
 	char			*key;
@@ -74,7 +74,7 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-/* Estrutura principal do shell */
+/* Main shell structure */
 typedef struct s_shell
 {
 	t_env			*env_list;

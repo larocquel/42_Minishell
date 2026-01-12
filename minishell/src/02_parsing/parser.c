@@ -6,15 +6,15 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:59:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/06 16:25:02 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Processa redirecionamentos.
-Avança o ponteiro 'tok' para depois do alvo (redir + target).
+Processes redirections.
+Advances the 'tok' pointer past the target (redir + target).
 */
 static int	handle_redir(t_cmd *cmd, t_token **tok)
 {
@@ -35,7 +35,7 @@ static int	handle_redir(t_cmd *cmd, t_token **tok)
 }
 
 /*
-Aloca a estrutura do comando e o array de argumentos.
+Allocates the command structure and the arguments array.
 */
 static t_cmd	*init_cmd(t_token *start)
 {
@@ -60,8 +60,8 @@ static t_cmd	*init_cmd(t_token *start)
 }
 
 /*
-Processa um único token (seja WORD ou REDIR).
-Retorna 0 em caso de erro, 1 em sucesso.
+Processes a single token (either WORD or REDIR).
+Returns 0 on error, 1 on success.
 */
 static int	fill_cmd_args(t_cmd *cmd, t_token **tok, int *i)
 {
@@ -78,7 +78,7 @@ static int	fill_cmd_args(t_cmd *cmd, t_token **tok, int *i)
 }
 
 /*
-Cria um comando consumindo tokens até encontrar um PIPE.
+Creates a command consuming tokens until finding a PIPE.
 */
 static t_cmd	*create_cmd(t_token **cur)
 {
@@ -105,8 +105,8 @@ static t_cmd	*create_cmd(t_token **cur)
 }
 
 /*
-Função principal do parser.
-Gera a lista encadeada de comandos.
+Main parser function.
+Generates the linked list of commands.
 */
 t_cmd	*parse_pipeline(t_token *tokens)
 {

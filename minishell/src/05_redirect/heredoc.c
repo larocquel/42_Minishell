@@ -6,14 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 12:26:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 00:56:03 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:02:40 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Gera nome unico para arquivo temporario.
+Generates unique temporary file name.
 */
 static char	*generate_heredoc_name(void)
 {
@@ -28,7 +28,7 @@ static char	*generate_heredoc_name(void)
 }
 
 /*
-Loop de leitura do readline. Retorna 130 se interrompido por sinal.
+Readline reading loop. Returns 130 if interrupted by signal.
 */
 static int	heredoc_loop(int fd, char *delimiter)
 {
@@ -59,7 +59,7 @@ static int	heredoc_loop(int fd, char *delimiter)
 }
 
 /*
-Prepara o arquivo, executa o loop e substitui o target do redirecionamento.
+Prepares the file, executes the loop and replaces the redirection target.
 */
 static int	exec_heredoc(t_redir *r)
 {
@@ -90,7 +90,7 @@ static int	exec_heredoc(t_redir *r)
 }
 
 /*
-Itera sobre comandos e redirecoes processando heredocs.
+Iterates over commands and redirections processing heredocs.
 */
 int	process_heredocs(t_cmd *cmds)
 {

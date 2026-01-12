@@ -6,16 +6,16 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 21:12:31 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 18:13:46 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:00:59 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Converte nossa lista t_env de volta para char **
-Formato: "KEY_VALUE"
-Necessário para passar para execve()
+Converts our t_env list back to char **
+Format: "KEY_VALUE"
+Required to pass to execve()
 */
 char	**env_to_array(t_env *env_list)
 {
@@ -47,9 +47,9 @@ char	**env_to_array(t_env *env_list)
 }
 
 /*
-Procura o binário do comando.
-1. Se cmd começar com '/' ou './', assume caminho absoluto/relativo.
-2. Senão, busca nas pastas de variável PATH
+Searches for the command's binary.
+1. If cmd starts with '/' or './', assumes absolute/relative path.
+2. Otherwise, searches in PATH variable folders
 */
 char	*find_executable(char *cmd, t_env *env_list)
 {

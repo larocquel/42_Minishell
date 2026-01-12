@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 19:26:06 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 22:53:52 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Processa a variavel $VAR ou $?.
-Retorna o novo indice i.
+Processes the variable $VAR or $?.
+Returns the new index i.
 */
 static int	handle_dollar(char *str, int i, char **res, t_shell *sh)
 {
@@ -46,7 +46,7 @@ static int	handle_dollar(char *str, int i, char **res, t_shell *sh)
 }
 
 /*
-Controla o estado das aspas durante a expansão.
+Controls the quotes state during expansion.
 */
 static void	update_quotes(char c, int *sq, int *dq)
 {
@@ -57,8 +57,8 @@ static void	update_quotes(char c, int *sq, int *dq)
 }
 
 /*
-Expande tokens do tipo WORD.
-Trata quotes e variaveis de ambiente.
+Expands WORD type tokens.
+Handles quotes and environment variables.
 */
 void	expand_token(t_token *tok, t_shell *sh)
 {
@@ -88,7 +88,7 @@ void	expand_token(t_token *tok, t_shell *sh)
 }
 
 /*
-Itera sobre a lista de tokens e expande WORDS.
+Iterates over the token list and expands WORDS.
 */
 void	expand_all_tokens(t_shell *sh, t_token *tokens)
 {

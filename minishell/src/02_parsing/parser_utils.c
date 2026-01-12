@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 22:49:58 by lla-rocq          #+#    #+#             */
-/*   Updated: 2026/01/05 22:55:15 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Adiciona redirecionamento à lista do comando.
+Adds redirection to the command's list.
 */
 int	redir_add_back(t_redir **lst, t_redir *new_r)
 {
@@ -34,7 +34,7 @@ int	redir_add_back(t_redir **lst, t_redir *new_r)
 }
 
 /*
-Cria novo node de redirecionamento.
+Creates new redirection node.
 */
 t_redir	*redir_new(t_type type, const char *target)
 {
@@ -55,7 +55,7 @@ t_redir	*redir_new(t_type type, const char *target)
 }
 
 /*
-Conta palavras até o próximo pipe.
+Counts words until the next pipe.
 */
 size_t	count_words_until_pipe(t_token *tok)
 {
@@ -79,7 +79,7 @@ size_t	count_words_until_pipe(t_token *tok)
 }
 
 /*
-Verifica se o token atual é redirect invalido (sem argumento).
+Checks if the current token is an invalid redirect (without argument).
 */
 static int	is_invalid_redir(t_token *tok)
 {
@@ -91,7 +91,7 @@ static int	is_invalid_redir(t_token *tok)
 }
 
 /*
-Valida sintaxe geral (pipes duplicados, redirs vazios).
+Validates general syntax (duplicate pipes, empty redirects).
 */
 int	validate_syntax(t_token *tok)
 {

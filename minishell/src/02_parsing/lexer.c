@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 18:27:23 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 22:54:57 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:58:14 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Identifica e consome operadores (|, <, >, <<, >>).
+Identifies and consumes operators (|, <, >, <<, >>).
 */
 static t_type	read_operator(const char *s, size_t *i)
 {
@@ -35,7 +35,7 @@ static t_type	read_operator(const char *s, size_t *i)
 }
 
 /*
-Verifica se deve parar de ler a palavra (separador fora de aspas).
+Checks if reading the word should stop (separator outside quotes).
 */
 static int	is_word_end(char c, int sq, int dq)
 {
@@ -45,7 +45,7 @@ static int	is_word_end(char c, int sq, int dq)
 }
 
 /*
-Lê uma palavra completa respeitando quotes.
+Reads a complete word respecting quotes.
 */
 static t_token	*read_word(const char *line, size_t *i)
 {
@@ -73,7 +73,7 @@ static t_token	*read_word(const char *line, size_t *i)
 }
 
 /*
-Loop principal do Lexer.
+Main Lexer loop.
 */
 t_token	*tokenize_line(const char *line)
 {

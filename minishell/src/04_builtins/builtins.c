@@ -6,16 +6,16 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:26:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/11 14:54:02 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:01:21 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Verifica overflow de long long. Retorna 1 se ok, 0 se erro.
-Salva o resultado em *out.
-Ignora espacos iniciais igual ao bash.
+Checks for long long overflow. Returns 1 if ok, 0 if error.
+Saves the result in *out.
+Ignores initial spaces like bash.
 */
 static int	parse_long_long(const char *str, long long *out)
 {
@@ -48,9 +48,9 @@ static int	parse_long_long(const char *str, long long *out)
 
 /*
 Builtin: exit
-Se numero > long long ou nao numerico -> erro e exit(2).
-Se OK -> exit(num % 256).
-Usa exit_child para limpar memoria.
+If number > long long or non-numeric -> error and exit(2).
+If OK -> exit(num % 256).
+Uses exit_child to clean up memory.
 */
 int	ft_exit(t_shell *sh, t_cmd *cmd)
 {
@@ -77,7 +77,7 @@ int	ft_exit(t_shell *sh, t_cmd *cmd)
 
 /*
 Builtin: env
-Imprime variaveis de ambiente que possuem valor definido.
+Prints environment variables that have a defined value.
 */
 int	ft_env(t_shell *sh)
 {
@@ -99,7 +99,7 @@ int	ft_env(t_shell *sh)
 
 /*
 Builtin: pwd
-Imprime diretorio atual de trabalho.
+Prints current working directory.
 */
 int	ft_pwd(void)
 {
@@ -116,7 +116,7 @@ int	ft_pwd(void)
 
 /*
 Builtin: echo
-Imprime argumentos. Suporta flag -n (sem quebra de linha).
+Prints arguments. Supports -n flag (no newline).
 */
 int	ft_echo(t_cmd *cmd)
 {

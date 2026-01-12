@@ -6,14 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 16:53:55 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 00:57:26 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:00:21 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Configura redirecionamentos e chama o executor simples no filho.
+Sets up redirections and calls the simple executor in child.
 */
 static void	child_process(t_shell *sh, t_cmd *cmd, int fd_in, int fd_out)
 {
@@ -33,7 +33,7 @@ static void	child_process(t_shell *sh, t_cmd *cmd, int fd_in, int fd_out)
 }
 
 /*
-Fork e preparacao dos pipes para o processo filho.
+Fork and pipe preparation for the child process.
 */
 static void	exec_in_child(t_shell *sh, t_cmd *cmd, int fd_in, int pipefd[2])
 {
@@ -49,7 +49,7 @@ static void	exec_in_child(t_shell *sh, t_cmd *cmd, int fd_in, int pipefd[2])
 }
 
 /*
-Gerencia fechamento de FDs no processo pai para evitar leaks.
+Manages FD closure in parent process to avoid leaks.
 */
 static void	handle_parent_fds(int pipefd[2], int *fd_in, t_cmd *tmp)
 {
@@ -62,7 +62,7 @@ static void	handle_parent_fds(int pipefd[2], int *fd_in, t_cmd *tmp)
 }
 
 /*
-Aguarda todos os filhos e coleta o status do ultimo.
+Waits for all children and collects the status of the last one.
 */
 static void	wait_children(t_shell *sh, int last_pid)
 {
@@ -84,7 +84,7 @@ static void	wait_children(t_shell *sh, int last_pid)
 }
 
 /*
-Executa a pipeline completa: Heredoc -> Fork -> Wait.
+Executes the complete pipeline: Heredoc -> Fork -> Wait.
 */
 void	execute_pipeline(t_shell *sh, t_cmd *cmds)
 {

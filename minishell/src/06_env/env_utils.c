@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:14:47 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 23:35:18 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:03:40 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Cria um novo nó da lista t_env.
+Creates a new t_env list node.
 */
 t_env	*env_new(char *key, char *value)
 {
@@ -29,7 +29,7 @@ t_env	*env_new(char *key, char *value)
 }
 
 /*
-Adiciona um nó ao final da lista encadeada.
+Adds a node to the end of the linked list.
 */
 void	env_add_back(t_env **lst, t_env *new_node)
 {
@@ -49,7 +49,7 @@ void	env_add_back(t_env **lst, t_env *new_node)
 }
 
 /*
-Busca o PONTEIRO para o nó que tem a chave 'key'.
+Searches for the POINTER to the node that has the 'key'.
 */
 t_env	*env_get_node(t_env *env, char *key)
 {
@@ -63,7 +63,7 @@ t_env	*env_get_node(t_env *env, char *key)
 }
 
 /*
-Remove um nó da lista baseado na chave e libera memória.
+Removes a node from the list based on the key and frees memory.
 */
 void	env_remove_node(t_shell *sh, char *key)
 {

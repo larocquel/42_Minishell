@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:57:37 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 17:53:18 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:01:39 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_cd(t_shell *sh, t_cmd *cmd)
 }
 
 /*
-Auxiliar local para processar cada argumento do export
+Local helper to process each export argument
 */
 static void	process_export_arg(t_shell *sh, char *arg)
 {
@@ -63,7 +63,7 @@ static void	process_export_arg(t_shell *sh, char *arg)
 
 /*
 Builtin: export
-Alterado: Se nao tiver argumentos, chama print_sorted_export.
+Modified: If no arguments, calls print_sorted_export.
 */
 int	ft_export(t_shell *sh, t_cmd *cmd)
 {
@@ -91,7 +91,7 @@ int	ft_export(t_shell *sh, t_cmd *cmd)
 
 /*
 Builtin: unset
-Uso: unset VAR1 VAR2 ...
+Usage: unset VAR1 VAR2 ...
 */
 int	ft_unset(t_shell *sh, t_cmd *cmd)
 {

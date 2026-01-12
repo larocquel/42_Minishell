@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 22:38:26 by lla-rocq          #+#    #+#             */
-/*   Updated: 2026/01/05 22:53:40 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:59:59 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Adiciona um char ao fim da string.
-Retorna nova string e liberta a antiga.
+Adds a char to the end of the string.
+Returns new string and frees the old one.
 */
 char	*append_char(char *str, char c)
 {
@@ -38,8 +38,8 @@ char	*append_char(char *str, char c)
 }
 
 /*
-Adiciona uma string ao fim de outra.
-Retorna nova string e liberta a base.
+Adds a string to the end of another.
+Returns new string and frees the base.
 */
 char	*append_str(char *base, char *val)
 {
@@ -55,8 +55,8 @@ char	*append_str(char *base, char *val)
 }
 
 /*
-Auxiliar: Remove aspas da string final.
-Copia chars ignorando quotes externas.
+Helper: Removes quotes from the final string.
+Copies chars ignoring outer quotes.
 */
 void	remove_quotes_final(char *str)
 {

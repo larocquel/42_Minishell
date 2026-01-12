@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:37:35 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/05 23:35:10 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:03:59 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 volatile sig_atomic_t	g_signal;
 
 /*
-Handler para SIGINT (Ctrl-C) no modo interativo.
+Handler for SIGINT (Ctrl-C) in interactive mode.
 */
 static void	handle_sigint(int sig)
 {
@@ -28,7 +28,7 @@ static void	handle_sigint(int sig)
 }
 
 /*
-Configura sinais para o Prompt (Pai Interativo).
+Configures signals for Prompt (Interactive Parent).
 */
 void	setup_signals_interactive(void)
 {
@@ -41,7 +41,7 @@ void	setup_signals_interactive(void)
 }
 
 /*
-Restaura comportamento padrão para Processos Filhos.
+Restores default behavior for Child Processes.
 */
 void	setup_signals_child(void)
 {
@@ -50,7 +50,7 @@ void	setup_signals_child(void)
 }
 
 /*
-Ignora sinais no Pai enquanto espera Filhos.
+Ignores signals in Parent while waiting for Children.
 */
 void	setup_signals_ignore(void)
 {

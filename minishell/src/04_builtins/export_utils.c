@@ -6,14 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/08 17:52:06 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/11 15:06:21 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:02:21 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Conta quantos nós existem na lista de ambiente.
+Counts how many nodes exist in the environment list.
 */
 static int	env_list_size(t_env *env)
 {
@@ -29,8 +29,8 @@ static int	env_list_size(t_env *env)
 }
 
 /*
-Ordena o array de ponteiros usando Bubble Sort.
-Compara as chaves (keys) alfabeticamente.
+Sorts the array of pointers using Bubble Sort.
+Compares the keys alphabetically.
 */
 static void	sort_env_array(t_env **arr, int size)
 {
@@ -57,7 +57,7 @@ static void	sort_env_array(t_env **arr, int size)
 }
 
 /*
-Funcao auxiliar para imprimir uma unica linha do export.
+Helper function to print a single export line.
 */
 static void	print_one_export(t_env *node)
 {
@@ -68,11 +68,11 @@ static void	print_one_export(t_env *node)
 }
 
 /*
-Função principal chamada pelo ft_export quando sem argumentos.
-1. Cria array de ponteiros.
-2. Ordena.
-3. Imprime no formato declare -x VAR="VAL".
-4. Libera o array (mas não os nós).
+Main function called by ft_export when without arguments.
+1. Creates pointer array.
+2. Sorts.
+3. Prints in format declare -x VAR="VAL".
+4. Frees the array (but not the nodes).
 */
 void	print_sorted_export(t_shell *sh)
 {

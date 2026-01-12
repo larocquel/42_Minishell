@@ -6,14 +6,14 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 17:57:07 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/08 18:37:52 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/12 19:00:42 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Função auxiliar para encerrar processo filho limpando TUDO.
+Helper function to terminate child process cleaning up EVERYTHING.
 */
 void	exit_child(t_shell *sh, int status)
 {
@@ -27,7 +27,7 @@ void	exit_child(t_shell *sh, int status)
 }
 
 /*
-Lida com erros de execução baseados no errno.
+Handles execution errors based on errno.
 */
 static void	handle_exec_error(char *cmd, t_shell *sh)
 {
@@ -55,8 +55,8 @@ static void	handle_exec_error(char *cmd, t_shell *sh)
 }
 
 /*
-Verifica e executa builtins dentro do processo filho.
-CORRECAO: O export agora eh executado, pois export sem args imprime coisas.
+Checks and executes builtins inside the child process.
+FIX: export is now executed, as export without args prints things.
 */
 static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 {
@@ -76,7 +76,7 @@ static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 }
 
 /*
-Executa um comando simples.
+Executes a simple command.
 */
 void	exec_simple_cmd(t_shell *sh, t_cmd *cmd)
 {

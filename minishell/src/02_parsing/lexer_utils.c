@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lla-rocq <lla-rocq@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 22:49:19 by lla-rocq          #+#    #+#             */
-/*   Updated: 2026/01/05 22:55:04 by lla-rocq         ###   ########.fr       */
+/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /*
-Cria token com copia da string value.
+Creates token with a copy of the value string.
 */
 t_token	*token_new(t_type type, const char *start, size_t len)
 {
@@ -39,7 +39,7 @@ t_token	*token_new(t_type type, const char *start, size_t len)
 }
 
 /*
-Cria token consumindo a string value (pointer handover).
+Creates token consuming the value string (pointer handover).
 */
 t_token	*token_new_owned(t_type type, char *value)
 {
@@ -58,7 +58,7 @@ t_token	*token_new_owned(t_type type, char *value)
 }
 
 /*
-Fabrica tokens de operadores fixos.
+Factory for fixed operator tokens.
 */
 t_token	*token_new_op(t_type type)
 {
@@ -76,7 +76,7 @@ t_token	*token_new_op(t_type type)
 }
 
 /*
-Adiciona token ao fim da lista encadeada.
+Adds token to the end of the linked list.
 */
 int	token_add_back(t_token **lst, t_token *new_tok)
 {
