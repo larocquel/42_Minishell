@@ -81,7 +81,7 @@ minishell/
 1. **Clone the repository:**
 
 ```bash
-git clone [https://github.com/larocquel/42_Minishell.git](https://github.com/larocquel/42_Minishell.git)
+git clone git@github.com:larocquel/42_Minishell.git
 
 ```
 
