@@ -140,23 +140,31 @@ Below is an overview of suggested test cases.
 This project was a beast, and we couldn't have tamed it without the help of the 42 Porto community.
 A special shoutout to:
 
-* <a href="https://github.com/larocqueg"><img align="left" src="https://avatars.githubusercontent.com/larocqueg?size=100" width="50"></a>
-**[Gabriel La Rocque](https://github.com/larocqueg)**
-<br>For the game-changing suggestion to implement Environment Variables using *Linked Lists* instead of a complex *Binary Tree* structure. Simplicity is key!
-<br clear="left"/>
 
-* <a href="https://github.com/therappha"><img align="left" src="https://avatars.githubusercontent.com/therappha?size=100" width="50"></a>
-**[Rafael Ferreira](https://github.com/therappha)**
-<br>For the critical insight on memory management—specifically, ensuring child processes perform a full cleanup before exiting to prevent inherited leaks.
-<br clear="left"/>
+
 
 * <a href="https://github.com/Daniela-Padilha"><img align="left" src="https://avatars.githubusercontent.com/Daniela-Padilha?size=100" width="50"></a>
 **[Daniela Padilha](https://github.com/Daniela-Padilha)**
-<br>For providing support of great importance; her advice and guidance were of immense value throughout this journey.
+<br>For providing `support` of great importance; her `advice` and `guidance` were of immense value throughout this journey.
 <br clear="left"/>
 
 * <a href="https://github.com/izzytoot"><img align="left" src="https://avatars.githubusercontent.com/izzytoot?size=100" width="50"></a>
 **[Isabel Tootil](https://github.com/izzytoot)**
-<br>For sharing her incredibly rigorous and well-organized test documentation, which pushed our Minishell to the limit and ensured its robustness.
+<br>For sharing her incredibly rigorous and well-organized `test documentation`, which pushed our `Minishell` to the limit and ensured its robustness.
+<br clear="left"/>
+
+* <a href="https://github.com/therappha"><img align="left" src="https://avatars.githubusercontent.com/therappha?size=100" width="50"></a>
+**[Rafael Ferreira](https://github.com/therappha)**
+<br>For the critical insight on `memory management—specifically`, ensuring `child processes` perform a full cleanup before exiting to prevent `inherited leaks`.
+<br clear="left"/>
+
+* <a href="https://github.com/jvieira96"><img align="left" src="https://avatars.githubusercontent.com/jvieira96?size=100" width="50"></a>
+**[João Vieira](https://github.com/jvieira96)**
+<br>For unlocking the initial mindset to kickstart the project, specifically by introducing the `readline` library and demonstrating the power of `structs` and `enums` for organization.
+<br clear="left"/>
+
+* <a href="https://github.com/larocqueg"><img align="left" src="https://avatars.githubusercontent.com/larocqueg?size=100" width="50"></a>
+**[Gabriel La Rocque](https://github.com/larocqueg)**
+<br>For the game-changing suggestion to implement `Environment Variables` using `Linked Lists` instead of a complex `Binary Tree` structure. Simplicity is key!
 <br clear="left"/>
 
