@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/larocquel/42_Minishell/raw/f7b0ecb4e4201d5fd2637876294ca07e1b543cad/img/minishell_banner.png" width="100%" />
+  <img src="https://github.com/larocquel/42_Minishell/blob/8b3675abd4a1d697e092bb5e8cfa6b3f18516db0/img/minishell_banner.png" width="100%" />
 </div>
 
 > "Creating a shell is the closest you can get to talking directly to the Kernel."
