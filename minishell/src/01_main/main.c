@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:11 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 18:58:14 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/18 16:22:41 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	process_line(t_shell *sh, char *line)
 	if (!sh->tokens)
 		return ;
 	expand_all_tokens(sh, sh->tokens);
-	sh->cmds = parse_pipeline(sh->tokens);
+	sh->cmds = parse_pipeline(sh, sh->tokens);
 	if (!sh->cmds)
 	{
 		free_tokens(sh->tokens);

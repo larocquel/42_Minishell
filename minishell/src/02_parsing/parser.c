@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 16:59:10 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/18 16:23:21 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,14 @@ static t_cmd	*create_cmd(t_token **cur)
 Main parser function.
 Generates the linked list of commands.
 */
-t_cmd	*parse_pipeline(t_token *tokens)
+t_cmd	*parse_pipeline(t_shell *sh, t_token *tokens)
 {
 	t_cmd	*head;
 	t_cmd	*curr;
 	t_cmd	*new_node;
 	t_token	*tok;
 
-	if (!tokens || !validate_syntax(tokens))
+	if (!tokens || !validate_syntax(sh, tokens))
 		return (NULL);
 	head = NULL;
 	curr = NULL;

@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 19:04:19 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/18 16:20:41 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,12 +105,12 @@ t_token	*token_new_owned(t_type type, char *value);
 t_token	*token_new_op(t_type type);
 int		token_add_back(t_token **lst, t_token *new_tok);
 /* parser.c */
-t_cmd	*parse_pipeline(t_token *tokens);
+t_cmd	*parse_pipeline(t_shell *sh, t_token *tokens);
 /* parser_utils.c */
 int		redir_add_back(t_redir **lst, t_redir *new_r);
 t_redir	*redir_new(t_type type, const char *target);
 size_t	count_words_until_pipe(t_token *tok);
-int		validate_syntax(t_token *tok);
+int		validate_syntax(t_shell *sh, t_token *tok);
 /* expand.c */
 void	expand_token(t_token *tok, t_shell *sh);
 void	expand_all_tokens(t_shell *sh, t_token *tokens);

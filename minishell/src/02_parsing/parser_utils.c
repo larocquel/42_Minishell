@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 22:49:58 by lla-rocq          #+#    #+#             */
-/*   Updated: 2026/01/12 18:59:31 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/18 16:35:15 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,37 +79,39 @@ size_t	count_words_until_pipe(t_token *tok)
 }
 
 /*
-Checks if the current token is an invalid redirect (without argument).
+Helper to print syntax error and set exit status.
 */
-static int	is_invalid_redir(t_token *tok)
+static int	print_syntax_error(t_shell *sh, char *token)
 {
-	if (tok->type == WORD || tok->type == PIPE)
-		return (0);
-	if (!tok->next || tok->next->type != WORD)
-		return (1);
+	ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+	ft_putstr_fd(token, 2);
+	ft_putstr_fd("'\n", 2);
+	sh->last_status = 2;
 	return (0);
 }
 
 /*
-Validates general syntax (duplicate pipes, empty redirects).
+Validates general syntax (pipes at start/end, double pipes, empty redirs).
 */
-int	validate_syntax(t_token *tok)
+int	validate_syntax(t_shell *sh, t_token *tok)
 {
-	t_token	*prev;
-
-	prev = NULL;
 	if (tok && tok->type == PIPE)
-		return (0);
+		return (print_syntax_error(sh, "|"));
 	while (tok)
 	{
-		if (tok->type == PIPE && (!prev || prev->type == PIPE))
-			return (0);
-		if (is_invalid_redir(tok))
-			return (0);
-		prev = tok;
+		if (tok->type == PIPE)
+		{
+			if (!tok->next || tok->next->type == PIPE)
+				return (print_syntax_error(sh, "|"));
+		}
+		else if (tok->type != WORD)
+		{
+			if (!tok->next)
+				return (print_syntax_error(sh, "newline"));
+			if (tok->next->type != WORD)
+				return (print_syntax_error(sh, tok->next->value));
+		}
 		tok = tok->next;
 	}
-	if (prev && prev->type == PIPE)
-		return (0);
 	return (1);
 }
