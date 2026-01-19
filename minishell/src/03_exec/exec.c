@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 16:53:55 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 19:00:21 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/19 20:46:38 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	execute_pipeline(t_shell *sh, t_cmd *cmds)
 	pid_t	pid;
 	t_cmd	*tmp;
 
-	if (process_heredocs(cmds) == 130)
+	if (process_heredocs(sh, cmds) == 130)
 		return ((void)(sh->last_status = 130));
 	fd_in = -1;
 	setup_signals_ignore();

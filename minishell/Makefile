@@ -6,7 +6,7 @@
 #    By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/17 15:49:02 by leoaguia          #+#    #+#              #
-#    Updated: 2026/01/12 19:21:29 by leoaguia         ###   ########.fr        #
+#    Updated: 2026/01/19 20:20:30 by leoaguia         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,8 @@ SRC         = $(SRC_DIR)/01_main/main.c                 \
               $(SRC_DIR)/05_redirect/heredoc.c          \
               $(SRC_DIR)/06_env/env.c                   \
               $(SRC_DIR)/06_env/env_utils.c             \
-              $(SRC_DIR)/07_signals/signals.c
+              $(SRC_DIR)/07_signals/signals.c           \
+              $(SRC_DIR)/07_signals/signals_utils.c
 
 OBJ         = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 

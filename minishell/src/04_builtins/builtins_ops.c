@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 21:57:37 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 19:01:39 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/19 21:01:11 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,15 @@ int	ft_cd(t_shell *sh, t_cmd *cmd)
 	char	old_pwd[4096];
 	char	*path;
 
+	if (cmd->argv[1])
+		return (ft_putendl_fd("minishell: cd: too many arguments", 2), 1);
 	if (!getcwd(old_pwd, 4096))
 		old_pwd[0] = '\0';
 	if (!cmd->argv[1])
 	{
 		path = get_env_value(sh->env_list, "HOME");
 		if (!path)
-		{
-			ft_putendl_fd("minishell: cd: HOME not set", 2);
-			return (1);
-		}
+			return (ft_putendl_fd("minishell: cd: HOME not set", 2), 1);
 	}
 	else
 		path = cmd->argv[1];

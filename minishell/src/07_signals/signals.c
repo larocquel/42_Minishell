@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 19:37:35 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/12 19:03:59 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/19 21:15:35 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,18 @@ static void	handle_sigint(int sig)
 }
 
 /*
+Handler for SIGINT during Heredoc.
+Closes STDIN to force readline to exit its blocking state.
+*/
+static void	handle_heredoc_sigint(int sig)
+{
+	(void)sig;
+	g_signal = 130;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}
+
+/*
 Configures signals for Prompt (Interactive Parent).
 */
 void	setup_signals_interactive(void)
@@ -41,19 +53,11 @@ void	setup_signals_interactive(void)
 }
 
 /*
-Restores default behavior for Child Processes.
+Sets up signals specifically for Heredoc execution.
 */
-void	setup_signals_child(void)
+void	setup_signals_heredoc(void)
 {
 	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-}
-
-/*
-Ignores signals in Parent while waiting for Children.
-*/
-void	setup_signals_ignore(void)
-{
-	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, &handle_heredoc_sigint);
 }
