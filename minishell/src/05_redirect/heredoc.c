@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/26 12:26:05 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/19 21:11:14 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/19 21:24:33 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,38 +18,17 @@ Expands variables ($VAR and $?) inside a heredoc line.
 static char	*expand_hd_line(t_shell *sh, char *line)
 {
 	char	*res;
-	char	*key;
 	char	*val;
 	int		i;
-	int		start;
 
 	res = ft_strdup("");
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '$'
-			&& (ft_isalnum(line[i + 1])
+		if (line[i] == '$' && (ft_isalnum(line[i + 1])
 				|| line[i + 1] == '_' || line[i + 1] == '?'))
 		{
-			i++;
-			start = i;
-			if (line[i] == '?')
-			{
-				val = ft_itoa(sh->last_status);
-				i++;
-			}
-			else
-			{
-				while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
-					i++;
-				key = ft_substr(line, start, i - start);
-				val = get_env_value(sh->env_list, key);
-				if (val)
-					val = ft_strdup(val);
-				else
-					val = ft_strdup("");
-				free(key);
-			}
+			val = get_var_content(sh, line, &i);
 			res = append_str(res, val);
 			free(val);
 		}
@@ -61,24 +40,9 @@ static char	*expand_hd_line(t_shell *sh, char *line)
 }
 
 /*
-Generates unique temporary file name.
-*/
-static char	*generate_heredoc_name(void)
-{
-	static int	i = 0;
-	char		*num;
-	char		*name;
-
-	num = ft_itoa(i++);
-	name = ft_strjoin("/tmp/.minishell_hd_", num);
-	free(num);
-	return (name);
-}
-
-/*
 Readline reading loop. Returns 130 if interrupted by signal.
 */
-static int	heredoc_loop(t_shell *sh, int fd, char *delimiter, int expand)
+static int	heredoc_loop(t_shell *sh, int fd, char *delim, int expand)
 {
 	char	*line;
 
@@ -92,7 +56,7 @@ static int	heredoc_loop(t_shell *sh, int fd, char *delimiter, int expand)
 			ft_putendl_fd("minishell: warning: heredoc delimited by EOF", 2);
 			break ;
 		}
-		if (ft_strcmp(line, delimiter) == 0)
+		if (ft_strcmp(line, delim) == 0)
 		{
 			free(line);
 			break ;
@@ -106,43 +70,33 @@ static int	heredoc_loop(t_shell *sh, int fd, char *delimiter, int expand)
 }
 
 /*
-Prepares the file, checks quotes on delimiter, executes loop.
+Manages file opening, signal backup, execution and cleanup.
 */
 static int	exec_heredoc(t_shell *sh, t_redir *r)
 {
 	int		fd;
-	int		stdin_backup;
-	char	*filename;
+	int		stdin_bkp;
 	int		status;
-	int		do_expand;
+	int		do_exp;
+	char	*fname;
 
-	filename = generate_heredoc_name();
-	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fname = generate_heredoc_name();
+	fd = open(fname, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
-		return (free(filename), 1);
-	do_expand = 1;
-	if (ft_strchr(r->target, '\'') || ft_strchr(r->target, '\"'))
-	{
-		do_expand = 0;
-		remove_quotes_final(r->target);
-	}
-	stdin_backup = dup(STDIN_FILENO);
+		return (free(fname), 1);
+	do_exp = check_expand_quotes(r->target);
+	stdin_bkp = dup(STDIN_FILENO);
 	setup_signals_heredoc();
-	status = heredoc_loop(sh, fd, r->target, do_expand);
-	dup2(stdin_backup, STDIN_FILENO);
-	close(stdin_backup);
+	status = heredoc_loop(sh, fd, r->target, do_exp);
+	dup2(stdin_bkp, STDIN_FILENO);
+	close(stdin_bkp);
 	setup_signals_interactive();
 	close(fd);
 	if (status == 130)
-	{
-		unlink(filename);
-		free(filename);
-		return (130);
-	}
-	free(r->target);
-	r->target = filename;
-	r->type = R_IN;
-	return (0);
+		unlink(fname);
+	if (status == 130)
+		return (free(fname), 130);
+	return (free(r->target), r->target = fname, r->type = R_IN, 0);
 }
 
 /*

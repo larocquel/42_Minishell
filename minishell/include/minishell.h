@@ -6,7 +6,7 @@
 /*   By: leoaguia <leoaguia@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 15:51:04 by leoaguia          #+#    #+#             */
-/*   Updated: 2026/01/19 21:04:39 by leoaguia         ###   ########.fr       */
+/*   Updated: 2026/01/19 21:30:27 by leoaguia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,10 @@ void	print_sorted_export(t_shell *sh);
 int		setup_redirects(t_cmd *cmd);
 /* heredoc.c */
 int		process_heredocs(t_shell *sh, t_cmd *cmds);
-char	*get_heredoc_file(void);
+/* heredoc_utils.c */
+char	*generate_heredoc_name(void);
+int		check_expand_quotes(char *delimiter);
+char	*get_var_content(t_shell *sh, char *line, int *i);
 
 /* 06_env */
 /* env.c */
