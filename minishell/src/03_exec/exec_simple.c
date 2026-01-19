@@ -65,7 +65,7 @@ static void	check_builtin_child(t_shell *sh, t_cmd *cmd)
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
 		exit_child(sh, ft_pwd());
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
-		exit_child(sh, ft_env(sh));
+		exit_child(sh, ft_env(sh, cmd));
 	if (ft_strcmp(cmd->argv[0], "export") == 0)
 		exit_child(sh, ft_export(sh, cmd));
 	if (ft_strcmp(cmd->argv[0], "unset") == 0

@@ -79,10 +79,15 @@ int	ft_exit(t_shell *sh, t_cmd *cmd)
 Builtin: env
 Prints environment variables that have a defined value.
 */
-int	ft_env(t_shell *sh)
+int	ft_env(t_shell *sh, t_cmd *cmd)
 {
 	t_env	*tmp;
 
+	if (cmd->argv[1])
+	{
+		ft_putendl_fd("minishell: env: too many arguments", STDERR_FILENO);
+		return (1);
+	}
 	tmp = sh->env_list;
 	while (tmp)
 	{

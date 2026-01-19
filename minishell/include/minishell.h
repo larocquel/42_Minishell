@@ -132,7 +132,7 @@ char	*find_executable(char *cmd, t_env *env_list);
 /* 04_builtins */
 /* builtins.c */
 int		ft_exit(t_shell *sh, t_cmd *cmd);
-int		ft_env(t_shell *sh);
+int		ft_env(t_shell *sh, t_cmd *cmd);
 int		ft_pwd(void);
 int		ft_echo(t_cmd *cmd);
 /* builtins_ops.c */
