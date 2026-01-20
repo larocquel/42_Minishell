@@ -20,7 +20,7 @@ int	ft_cd(t_shell *sh, t_cmd *cmd)
 	char	old_pwd[4096];
 	char	*path;
 
-	if (cmd->argv[1])
+	if (cmd->argv[2])
 		return (ft_putendl_fd("minishell: cd: too many arguments", 2), 1);
 	if (!getcwd(old_pwd, 4096))
 		old_pwd[0] = '\0';
